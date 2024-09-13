@@ -55,13 +55,13 @@ namespace UnityEngine.Localization
     [Serializable]
     public partial class LocalizedTexture : LocalizedAsset<Texture> {}
 
-    #if PACKAGE_TMP || (UNITY_2023_2_OR_NEWER && PACKAGE_UGUI) || PACKAGE_DOCS_GENERATION
+    /*#if !NO_TMP_FONTASSET && (PACKAGE_TMP || (UNITY_2023_2_OR_NEWER && PACKAGE_UGUI) || PACKAGE_DOCS_GENERATION)
     /// <summary>
     /// Provides a <see cref="LocalizedAsset{TObject}"/> which you can use to localize a TextMeshPro [TMPro.TMP_FontAsset](https://docs.unity3d.com/Packages/com.unity.textmeshpro@latest?subfolder=/api/TMPro.TMP_FontAsset)/>.
     /// </summary>
     [Serializable]
     public partial class LocalizedTmpFont : LocalizedAsset<TMPro.TMP_FontAsset> {}
-    #endif
+    #endif*/
 
     /// <summary>
     /// Provides a <see cref="LocalizedAsset{TObject}"/> which you can use to localize a [Font](https://docs.unity3d.com/ScriptReference/Font.html)/>.

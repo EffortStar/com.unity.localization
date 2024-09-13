@@ -40,6 +40,11 @@
             "name": "Unity",
             "expression": "2020.3",
             "define": "ENABLE_PROPERTY_VARIANTS"
+        },
+        {
+            "name": "com.unity.ugui",
+            "expression": "3.0.0",
+            "define": "NO_TMP_FONTASSET"
         }
     ],
     "noEngineReferences": false
