@@ -40,10 +40,10 @@ namespace UnityEngine.Localization
         }
     }
 
-    #if PACKAGE_TMP || (UNITY_2023_2_OR_NEWER && PACKAGE_UGUI) || PACKAGE_DOCS_GENERATION
+    /*#if !NO_TMP_FONTASSET && (PACKAGE_TMP || (UNITY_2023_2_OR_NEWER && PACKAGE_UGUI) || PACKAGE_DOCS_GENERATION)
     [UxmlObject]
     public partial class LocalizedTmpFont { }
-    #endif
+    #endif*/
 
     [UxmlObject]
     public partial class LocalizedFont { }
