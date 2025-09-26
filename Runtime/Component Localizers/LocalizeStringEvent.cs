@@ -111,7 +111,7 @@ namespace UnityEngine.Localization.Components
         protected virtual void OnEnable()
         {
             #if UNITY_EDITOR
-            if (LocalizationSettings.Instance.IsChangingPlayMode)
+            if (PlaymodeState.IsChangingPlayMode)
                 return;
             #endif
 
@@ -139,7 +139,7 @@ namespace UnityEngine.Localization.Components
         protected virtual void UpdateString(string value)
         {
             #if UNITY_EDITOR
-            if (!LocalizationSettings.Instance.IsPlayingOrWillChangePlaymode)
+            if (!PlaymodeState.IsPlayingOrWillChangePlaymode)
             {
                 if (StringReference == null || StringReference.IsEmpty)
                 {
@@ -172,7 +172,7 @@ namespace UnityEngine.Localization.Components
             {
                 StringReference.Arguments = m_FormatArguments.ToArray();
 
-                if (Application.isPlaying)
+                if (PlaymodeState.IsPlaying)
                     Debug.LogWarningFormat("LocalizeStringEvent({0}) is using the deprecated Format Arguments field which will be removed in the future. Consider upgrading to use String Reference Local Variables instead.", name, this);
             }
 

@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## [1.5.8] - 2025-09-26
+
+### Fixed
+
+- Fixed Smart Strings incorrectly evaluating global variables after the first selector. ([LOC-1252](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1252))
+- Simplified the string and asset picker so it does not include the side panels and customization options to match the object picker closer.
+- The string and asset picker will now remember the previous layout state. ([LOC-1256](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1256))
+
 ## [1.5.7] - 2025-08-07
 
 ### Fixed

@@ -70,7 +70,7 @@ namespace UnityEditor.Localization.PropertyVariants
                 }
             }
 
-            if (Application.isPlaying || !LocalizationSettings.HasSettings || LocalizationSettings.SelectedLocale == null)
+            if (PlaymodeState.IsPlaying || !LocalizationSettings.HasSettings || LocalizationSettings.SelectedLocale == null)
                 return modifications;
 
             // We want to create variant data in our GameObjectLocalizer however we also need to create Undo records for these changes.

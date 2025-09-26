@@ -160,7 +160,7 @@ namespace UnityEngine.Localization.Tables
             if (IsSmart)
             {
                 #if UNITY_EDITOR
-                if (!LocalizationSettings.Instance.IsPlayingOrWillChangePlaymode)
+                if (!PlaymodeState.IsPlayingOrWillChangePlaymode)
                 {
                     var localVariables = m_FormatCache?.LocalVariables;
                     m_FormatCache = null;

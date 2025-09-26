@@ -22,7 +22,7 @@ namespace UnityEngine.Localization.Settings
         {
             get
             {
-                if (LocalizationSettings.Instance.IsPlayingOrWillChangePlaymode && !PreloadOperation.IsDone)
+                if (PlaymodeState.IsPlayingOrWillChangePlaymode && !PreloadOperation.IsDone)
                 {
                     #if !UNITY_WEBGL // WebGL does not support WaitForCompletion
                     PreloadOperation.WaitForCompletion();

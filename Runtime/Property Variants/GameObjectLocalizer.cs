@@ -64,7 +64,7 @@ namespace UnityEngine.Localization.PropertyVariants
         void OnEnable()
         {
             #if UNITY_EDITOR
-            if (LocalizationSettings.Instance.IsChangingPlayMode)
+            if (PlaymodeState.IsChangingPlayMode)
                 return;
             #endif
 

@@ -323,7 +323,7 @@ namespace UnityEngine.Localization.Settings
                 m_InitializingOperationHandle = AddressablesInterface.ResourceManager.StartOperation(operation, operation.Dependency);
 
                 #if !UNITY_WEBGL // WebGL does not support WaitForCompletion
-                if (!m_InitializingOperationHandle.IsDone && m_InitializeSynchronously && IsPlaying)
+                if (!m_InitializingOperationHandle.IsDone && m_InitializeSynchronously && PlaymodeState.IsPlaying)
                     m_InitializingOperationHandle.WaitForCompletion();
                 #endif
             }
@@ -331,47 +331,12 @@ namespace UnityEngine.Localization.Settings
             return m_InitializingOperationHandle;
         }
 
-        #if UNITY_EDITOR
-        /// <summary>
-        /// We use this for testing so we don't have to enter play mode.
-        /// </summary>
-        internal bool? IsPlayingOverride { get; set; }
-        #endif
-
-        internal bool IsChangingPlayMode => IsPlayingOrWillChangePlaymode && !IsPlaying;
-
-        internal bool IsPlayingOrWillChangePlaymode
-        {
-            get
-            {
-                #if UNITY_EDITOR
-                if (IsPlayingOverride.HasValue)
-                    return IsPlayingOverride.Value;
-                return UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode || IsPlaying;
-                #else
-                return true;
-                #endif
-            }
-        }
-
-        internal bool IsPlaying
-        {
-            get
-            {
-                #if UNITY_EDITOR
-                if (IsPlayingOverride.HasValue)
-                    return IsPlayingOverride.Value;
-                #endif
-                return Application.isPlaying;
-            }
-        }
-
         internal virtual RuntimePlatform Platform =>
             #if ENABLE_DEVICE_SIMULATOR
             Device.Application.platform;
-            #else
+        #else
             Application.platform;
-            #endif
+        #endif
 
         /// <summary>
         /// <inheritdoc cref="IStartupLocaleSelector"/>
@@ -537,7 +502,7 @@ namespace UnityEngine.Localization.Settings
             }
 
             #if UNITY_EDITOR
-            if (!IsPlayingOrWillChangePlaymode)
+            if (!PlaymodeState.IsPlayingOrWillChangePlaymode)
             {
                 return m_AvailableLocales.GetLocale(EditorLocaleCode);
             }
@@ -613,20 +578,20 @@ namespace UnityEngine.Localization.Settings
 
             #if UNITY_EDITOR
             // Running the player loop outside of play mode will force an update for many types, especially UGUI.
-            if (!IsPlayingOrWillChangePlaymode)
+            if (!PlaymodeState.IsPlayingOrWillChangePlaymode)
             {
                 UnityEditor.EditorApplication.QueuePlayerLoopUpdate();
             }
             #endif
 
             // Ignore null locales in play mode
-            if (locale == null && IsPlayingOrWillChangePlaymode)
+            if (locale == null && PlaymodeState.IsPlayingOrWillChangePlaymode)
                 return;
 
             if (!m_SelectedLocaleAsync.IsValid() || !ReferenceEquals(m_SelectedLocaleAsync.Result, locale))
             {
                 #if UNITY_EDITOR
-                if (!IsPlayingOrWillChangePlaymode)
+                if (!PlaymodeState.IsPlayingOrWillChangePlaymode)
                 {
                     var code = locale == null ? string.Empty : locale.Identifier.Code;
                     EditorLocaleCode = code;

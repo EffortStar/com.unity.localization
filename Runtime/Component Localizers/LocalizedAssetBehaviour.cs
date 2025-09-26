@@ -44,7 +44,7 @@ namespace UnityEngine.Localization.Components
         protected virtual void OnEnable()
         {
             #if UNITY_EDITOR
-            if (LocalizationSettings.Instance.IsChangingPlayMode)
+            if (PlaymodeState.IsChangingPlayMode)
                 return;
             #endif
 
@@ -124,7 +124,7 @@ namespace UnityEngine.Localization.Components
         protected override void UpdateAsset(TObject localizedAsset)
         {
             #if UNITY_EDITOR
-            if (!LocalizationSettings.Instance.IsPlayingOrWillChangePlaymode)
+            if (!PlaymodeState.IsPlayingOrWillChangePlaymode)
             {
                 if (AssetReference.IsEmpty)
                 {

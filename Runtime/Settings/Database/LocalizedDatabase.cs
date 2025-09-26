@@ -145,7 +145,7 @@ namespace UnityEngine.Localization.Settings
             {
                 #if UNITY_EDITOR
                 // Don't preload in Editor preview
-                if (!LocalizationSettings.Instance.IsPlayingOrWillChangePlaymode)
+                if (!PlaymodeState.IsPlayingOrWillChangePlaymode)
                     return AddressablesInterface.ResourceManager.CreateCompletedOperation(this, null);
                 #endif
 
@@ -447,7 +447,7 @@ namespace UnityEngine.Localization.Settings
             operation.Dependency = LocalizationSettings.InitializationOperation;
             var handle = AddressablesInterface.ResourceManager.StartOperation(operation, LocalizationSettings.InitializationOperation);
 
-            if (LocalizationSettings.Instance.IsPlaying)
+            if (PlaymodeState.IsPlaying)
                 handle.CompletedTypeless += ReleaseNextFrame;
 
             return handle;
@@ -475,7 +475,7 @@ namespace UnityEngine.Localization.Settings
             operation.Dependency = LocalizationSettings.InitializationOperation;
             var handle = AddressablesInterface.ResourceManager.StartOperation(operation, LocalizationSettings.InitializationOperation);
 
-            if (LocalizationSettings.Instance.IsPlaying)
+            if (PlaymodeState.IsPlaying)
                 handle.CompletedTypeless += ReleaseNextFrame;
 
             return handle;
@@ -641,7 +641,7 @@ namespace UnityEngine.Localization.Settings
             operation.Dependency = LocalizationSettings.InitializationOperation;
             var handle = AddressablesInterface.ResourceManager.StartOperation(operation, LocalizationSettings.InitializationOperation);
 
-            if (LocalizationSettings.Instance.IsPlaying)
+            if (PlaymodeState.IsPlaying)
                 handle.CompletedTypeless += ReleaseNextFrame;
 
             return handle;

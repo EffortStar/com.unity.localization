@@ -1,7 +1,7 @@
 {
   "name": "com.unity.localization",
   "displayName": "Localization",
-  "version": "1.5.7",
+  "version": "1.5.8",
   "unity": "2019.4",
   "description": "Use the Localization package to easily configure localization settings for your application.\n\nAdd support for multiple languages and regional variants, including:\n\n• String localization: Set different strings to display based on locale. Use the Smart Strings feature to add logic to automatically replace specific strings, such as placeholders and plurals.\n• Asset localization: Use a different asset (such as a texture, model, or audio file) based on a locale.\n• Pseudo-localization: Test how your project will adapt to different localizations at an early stage, before adding your translations.\n• Import and export localization data to XLIFF, CSV and Google Sheets.\n\nAdd localization to your projects using the Localization package to help make your applications more accessible to a wider audience.",
   "keywords": [
@@ -14,18 +14,18 @@
     "com.unity.nuget.newtonsoft-json": "3.0.2"
   },
   "relatedPackages": {
-    "com.unity.localization.tests": "1.5.7"
+    "com.unity.localization.tests": "1.5.8"
   },
   "_upm": {
-    "changelog": "### Fixed\n\n- `GameObjectLocalizer.ApplyLocaleVariant` will now throw an exception if a null locale is passed in.\n- Changed TrackChanges so it doesn't stay enabled when the editor is restarted.\n- Fixed a bug where a change update could cause the GameObject localizer to RequestUpdate before it had a valid locale. ([LOC-1231](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1231))\n- Fixed Android building throwing a `DirectoryNotFoundException` when using adaptive icons. ([LOC-1235](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1235))\n- Fixed plurals using the wrong formatter when the locale was using a custom formatter. Locale now implements `IFormatProvider` and will now be passed into the Smart String formatting Info as the `Provider`. ([LOC-1224](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1224))\n- Fixed TreeView obsolete warnings in 6.2 and above.\n- Fixed unmodified assets being marked dirty when reimporting Localization Addressable Group. ([LOC-1221](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1221))\n- Support has been added for localizing the app name on macOS, tvOS and visionOS. The system will use the same values that have been configured for iOS. ([LOC-1219](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1219))"
+    "changelog": "### Fixed\n\n- Fixed Smart Strings incorrectly evaluating global variables after the first selector. ([LOC-1252](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1252))\n- Simplified the string and asset picker so it does not include the side panels and customization options to match the object picker closer.\n- The string and asset picker will now remember the previous layout state. ([LOC-1256](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1256))"
   },
   "upmCi": {
-    "footprint": "df9bab80bd1e79a27141dc9d8abf7f4be6267354"
+    "footprint": "e25a0d801867ed36cf8106e2edf99ba366fb1d74"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.localization@1.5/manual/index.html",
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/com.unity.localization.git",
     "type": "git",
-    "revision": "eac1fdf7591607a9ac704795f7ec74222d2bf9b3"
+    "revision": "6862739c1454c9415892b1524e67e7fea0da5a1a"
   }
 }

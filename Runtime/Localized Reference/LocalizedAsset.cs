@@ -320,7 +320,7 @@ namespace UnityEngine.Localization
             #endif
 
             // Dont update if we have no selected Locale
-            if (!LocalizationSettings.Instance.IsPlayingOrWillChangePlaymode && LocaleOverride == null && LocalizationSettings.SelectedLocale == null)
+            if (!PlaymodeState.IsPlayingOrWillChangePlaymode && LocaleOverride == null && LocalizationSettings.SelectedLocale == null)
             {
                 ClearLoadingOperation();
                 return;
@@ -332,7 +332,7 @@ namespace UnityEngine.Localization
                 ClearLoadingOperation();
                 #if UNITY_EDITOR
                 // If we are empty and playing or previewing then we should force an update.
-                if (!LocalizationSettings.Instance.IsPlayingOrWillChangePlaymode)
+                if (!PlaymodeState.IsPlayingOrWillChangePlaymode)
                     InvokeChangeHandler(null);
                 #endif
                 return;

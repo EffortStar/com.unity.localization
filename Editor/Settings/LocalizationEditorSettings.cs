@@ -334,7 +334,7 @@ namespace UnityEditor.Localization
         internal static void RefreshEditorPreview()
         {
             // Only update the preview in edit mode (LOC-1025)
-            if (LocalizationSettings.Instance.IsPlayingOrWillChangePlaymode)
+            if (PlaymodeState.IsPlayingOrWillChangePlaymode)
                 return;
 
             if (ActiveLocalizationSettings != null && ActiveLocalizationSettings.GetSelectedLocale() != null)
@@ -568,7 +568,7 @@ namespace UnityEditor.Localization
                 // Clear the locales cache.
                 m_ProjectLocales = null;
                 m_ProjectPseudoLocales = null;
-                if (!LocalizationSettings.Instance.IsPlayingOrWillChangePlaymode)
+                if (!PlaymodeState.IsPlayingOrWillChangePlaymode)
                     LocalizationSettings.Instance.ResetState();
 
                 if (!assetEntry.labels.Contains(LocalizationSettings.LocaleLabel))

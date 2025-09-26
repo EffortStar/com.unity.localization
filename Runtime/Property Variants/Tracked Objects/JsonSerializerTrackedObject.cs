@@ -150,7 +150,7 @@ namespace UnityEngine.Localization.PropertyVariants.TrackedObjects
                     continue;
 
                 #if UNITY_EDITOR
-                if (!Application.isPlaying)
+                if (!PlaymodeState.IsPlaying)
                     VariantsPropertyDriver.RegisterProperty(Target, property.PropertyPath);
                 #endif
 

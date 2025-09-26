@@ -29,8 +29,8 @@ namespace UnityEditor.Localization
         readonly ResourceManager m_ResourceManager = new ResourceManager();
 
         // Addressables is only safe to use in playmode, any other time we use the asset database. (LOC-722)
-        internal bool UseAddressables => (LocalizationSettings.Instance.IsPlayingOverride.HasValue && LocalizationSettings.Instance.IsPlayingOverride.Value) ||
-                                        (LocalizationSettings.Instance.IsPlayingOrWillChangePlaymode && PlayModeState == PlayModeStateChange.EnteredPlayMode);
+        internal bool UseAddressables => (PlaymodeState.IsPlayingOverride.HasValue && PlaymodeState.IsPlayingOverride.Value) ||
+                                        (PlaymodeState.IsPlayingOrWillChangePlaymode && PlayModeState == PlayModeStateChange.EnteredPlayMode);
 
         internal static PlayModeStateChange PlayModeState => EditorApplication.isPlaying ?
             EditorApplication.isPlayingOrWillChangePlaymode ? PlayModeStateChange.EnteredPlayMode : PlayModeStateChange.ExitingPlayMode :
@@ -50,7 +50,7 @@ namespace UnityEditor.Localization
 
         internal override AsyncOperationHandle<IList<IResourceLocation>> LoadResourceLocationsWithLabelsAsyncInternal(IEnumerable labels, MergeMode mode, Type type = null)
         {
-            if (LocalizationSettings.Instance.IsPlayingOrWillChangePlaymode)
+            if (PlaymodeState.IsPlayingOrWillChangePlaymode)
                 return base.LoadResourceLocationsWithLabelsAsyncInternal(labels, mode, type);
 
             throw new NotImplementedException("Should not be called outside of play mode");
@@ -92,7 +92,7 @@ namespace UnityEditor.Localization
 
         internal override AsyncOperationHandle<IList<TObject>> LoadAssetsFromLocationsInternal<TObject>(IList<IResourceLocation> locations, Action<TObject> callback)
         {
-            if (LocalizationSettings.Instance.IsPlayingOrWillChangePlaymode)
+            if (PlaymodeState.IsPlayingOrWillChangePlaymode)
                 return base.LoadAssetsFromLocationsInternal(locations, callback);
 
             throw new NotImplementedException("Should not be called outside of play mode");

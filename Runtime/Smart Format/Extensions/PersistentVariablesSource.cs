@@ -259,14 +259,17 @@ namespace UnityEngine.Localization.SmartFormat.Extensions
             if (selectorInfo.CurrentValue is IVariableGroup grp && EvaluateLocalGroup(selectorInfo, grp))
                 return true;
 
-            // If we are at the root we also test the local variables
-            if (selectorInfo.SelectorOperator == "" && EvaluateLocalGroup(selectorInfo, selectorInfo.FormatDetails.FormatCache?.LocalVariables))
-                return true;
-
-            if (TryGetValue(selector, out var group))
+            // If we are at the root we also test the local and global variables
+            if (selectorInfo.SelectorOperator == "")
             {
-                selectorInfo.Result = group;
-                return true;
+                if (EvaluateLocalGroup(selectorInfo, selectorInfo.FormatDetails.FormatCache?.LocalVariables))
+                    return true;
+
+                if (TryGetValue(selector, out var group))
+                {
+                    selectorInfo.Result = group;
+                    return true;
+                }
             }
 
             return false;

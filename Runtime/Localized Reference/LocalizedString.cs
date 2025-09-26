@@ -732,7 +732,7 @@ namespace UnityEngine.Localization
             m_CurrentTableEntry = TableEntryReference;
 
             // Don't update if we have no selected Locale
-            if (!LocalizationSettings.Instance.IsPlayingOrWillChangePlaymode && LocaleOverride == null && LocalizationSettings.SelectedLocale == null)
+            if (!PlaymodeState.IsPlayingOrWillChangePlaymode && LocaleOverride == null && LocalizationSettings.SelectedLocale == null)
                 return;
             #endif
 
@@ -740,7 +740,7 @@ namespace UnityEngine.Localization
             {
                 #if UNITY_EDITOR
                 // If we are empty and playing or previewing then we should force an update.
-                if (!LocalizationSettings.Instance.IsPlayingOrWillChangePlaymode)
+                if (!PlaymodeState.IsPlayingOrWillChangePlaymode)
                     InvokeChangeHandler(null);
                 #endif
                 return;
