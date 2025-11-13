@@ -266,7 +266,7 @@ namespace UnityEngine.Localization
         /// [WebGL](https://docs.unity3d.com/Packages/com.unity.addressables@latest/index.html?subfolder=/manual/SynchronousAddressables.html#webgl).
         /// </summary>
         /// <returns>The localized string for the <see cref="LocalizationSettings.SelectedLocale"/> or <see cref="LocalizedReference.LocaleOverride"/> if it is not <see langword="null"/>.</returns>
-        public string GetLocalizedString() => GetLocalizedStringAsync().WaitForCompletion();
+        public string GetLocalizedString() => AsyncOperationUtility.SynchronousLoad(GetLocalizedStringAsync());
 
         /// <summary>
         /// Provides a translated string from a <see cref="StringTable"/> with the <see cref="TableReference"/> and
@@ -285,7 +285,7 @@ namespace UnityEngine.Localization
         /// </summary>
         /// <param name="arguments">The arguments to pass into the Smart String formatter or [String.Format](https://docs.microsoft.com/en-us/dotnet/api/system.string.format).</param>
         /// <returns>The localized string for the <see cref="LocalizationSettings.SelectedLocale"/> or <see cref="LocalizedReference.LocaleOverride"/> if it is not <see langword="null"/>.</returns>
-        public string GetLocalizedString(params object[] arguments) => GetLocalizedStringAsync((IList<object>)arguments).WaitForCompletion();
+        public string GetLocalizedString(params object[] arguments) => AsyncOperationUtility.SynchronousLoad(GetLocalizedStringAsync((IList<object>)arguments));
 
         /// <summary>
         /// Provides a translated string from a <see cref="StringTable"/> with the <see cref="TableReference"/> and
@@ -293,7 +293,7 @@ namespace UnityEngine.Localization
         /// </summary>
         /// <param name="arguments">The arguments to pass into the Smart String formatter or [String.Format](https://docs.microsoft.com/en-us/dotnet/api/system.string.format).</param>
         /// <returns>The localized string for the <see cref="LocalizationSettings.SelectedLocale"/> or <see cref="LocalizedReference.LocaleOverride"/> if it is not <see langword="null"/>.</returns>
-        public string GetLocalizedString(IList<object> arguments) => GetLocalizedStringAsync(arguments).WaitForCompletion();
+        public string GetLocalizedString(IList<object> arguments) => AsyncOperationUtility.SynchronousLoad(GetLocalizedStringAsync(arguments));
 
         /// <summary>
         /// Provides a translated string from a <see cref="StringTable"/> with the <see cref="TableReference"/> and

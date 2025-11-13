@@ -2,6 +2,15 @@
 
 All notable changes to this package will be documented in this file.
 
+## [1.5.9] - 2025-11-13
+
+### Fixed
+
+- Fixed Addressables Analyzer not checking the table addresses correctly. ([LOC-1260](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1260))
+- Fixed an issue where negative values could be treated differently, causing invalid plural formatting. ([LOC-1258](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1258))
+- Fixed exception when pushing to a Google Sheet that had 1 less row than required. ([LOC-1261](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1261))
+- Fixed iOS and Mac builds not including localization data due to an if UNITY_INCLUDE_TESTS exclusion. ([LOC-1270](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1270))
+
 ## [1.5.8] - 2025-09-26
 
 ### Fixed

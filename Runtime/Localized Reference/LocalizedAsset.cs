@@ -295,10 +295,7 @@ namespace UnityEngine.Localization
         /// [WebGL](https://docs.unity3d.com/Packages/com.unity.addressables@latest/index.html?subfolder=/manual/SynchronousAddressables.html#webgl).
         /// </summary>
         /// <returns>Returns the localized asset.</returns>
-        public TObject LoadAsset()
-        {
-            return LoadAssetAsync().WaitForCompletion();
-        }
+        public TObject LoadAsset() => AsyncOperationUtility.SynchronousLoad(LoadAssetAsync());
 
         /// <inheritdoc/>
         protected internal override void ForceUpdate()

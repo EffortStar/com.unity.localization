@@ -630,13 +630,7 @@ namespace UnityEngine.Localization.Settings
         /// <inheritdoc cref="SelectedLocale"/>
         /// </summary>
         /// <returns>\</returns>
-        public virtual Locale GetSelectedLocale()
-        {
-            var localeOp = GetSelectedLocaleAsync();
-            if (localeOp.IsDone)
-                return localeOp.Result;
-            return localeOp.WaitForCompletion();
-        }
+        public virtual Locale GetSelectedLocale() => AsyncOperationUtility.SynchronousLoad(GetSelectedLocaleAsync());
 
         /// <summary>
         /// Indicates that the Locale is no longer available.

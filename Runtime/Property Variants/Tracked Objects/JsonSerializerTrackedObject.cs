@@ -201,7 +201,7 @@ namespace UnityEngine.Localization.PropertyVariants.TrackedObjects
                         #if !UNITY_WEBGL // WebGL does not support WaitForCompletion
                         else if (localizedStringProperty.LocalizedString.ForceSynchronous)
                         {
-                            jsonProperty.Value = stringOp.WaitForCompletion();
+                            jsonProperty.Value = AsyncOperationUtility.SynchronousLoad(stringOp);
                             AddressablesInterface.Release(stringOp);
                         }
                         #endif
@@ -235,7 +235,7 @@ namespace UnityEngine.Localization.PropertyVariants.TrackedObjects
                         #if !UNITY_WEBGL // WebGL does not support WaitForCompletion
                         else if (localizedAssetProperty.LocalizedObject.ForceSynchronous)
                         {
-                            var result = assetOp.WaitForCompletion();
+                            var result = AsyncOperationUtility.SynchronousLoad(assetOp);
                             jsonProperty.Value = result != null ? result.GetInstanceID() : 0;
                             AddressablesInterface.Release(assetOp);
                         }

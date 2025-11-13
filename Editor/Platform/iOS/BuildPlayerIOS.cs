@@ -1,8 +1,3 @@
-// The PBX classes used here are part of the Mac player, which is
-// often missing in test environments. This code is excluded from test builds
-// to avoid compilation failures on CI.
-#if !UNITY_INCLUDE_TESTS
-
 #if ((UNITY_TVOS || UNITY_STANDALONE_OSX || UNITY_VISIONOS) && ENABLE_LOCALIZATION_XCODE_SUPPORT) || (UNITY_IOS || UNITY_IPHONE)
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
@@ -90,5 +85,4 @@ namespace UnityEditor.Localization.Platform.iOS
         }
     }
 }
-#endif
 #endif

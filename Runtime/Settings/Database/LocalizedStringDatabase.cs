@@ -293,7 +293,7 @@ namespace UnityEngine.Localization.Settings
         public virtual string GetLocalizedString(TableReference tableReference, TableEntryReference tableEntryReference, IList<object> arguments, Locale locale = null, FallbackBehavior fallbackBehavior = FallbackBehavior.UseProjectSettings)
         {
             var handle = GetLocalizedStringAsyncInternal(tableReference, tableEntryReference, arguments, locale, fallbackBehavior, null, false);
-            var result = handle.WaitForCompletion();
+            var result = AsyncOperationUtility.SynchronousLoad(handle);
 
             // We can now release the operation for immediate reuse, no need to wait for the next frame.
             AddressablesInterface.Release(handle);
