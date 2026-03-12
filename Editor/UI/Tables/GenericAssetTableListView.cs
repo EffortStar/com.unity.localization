@@ -530,7 +530,7 @@ namespace UnityEditor.Localization.UI
             return m_VisibleRows;
         }
 
-        protected virtual void DrawKeyIdField(Rect cellRect, T2 keyItem) => EditorGUI.LabelField(cellRect, keyItem.KeyId.ToString());
+        protected virtual void DrawKeyIdField(Rect cellRect, T2 keyItem) => EditorGUI.SelectableLabel(cellRect, keyItem.KeyId.ToString());
 
         protected virtual void DrawKeyField(Rect cellRect, T2 keyItem)
         {

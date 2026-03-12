@@ -1,7 +1,7 @@
 {
   "name": "com.unity.localization",
   "displayName": "Localization",
-  "version": "1.5.9",
+  "version": "1.5.10",
   "unity": "2019.4",
   "description": "Use the Localization package to easily configure localization settings for your application.\n\nAdd support for multiple languages and regional variants, including:\n\n• String localization: Set different strings to display based on locale. Use the Smart Strings feature to add logic to automatically replace specific strings, such as placeholders and plurals.\n• Asset localization: Use a different asset (such as a texture, model, or audio file) based on a locale.\n• Pseudo-localization: Test how your project will adapt to different localizations at an early stage, before adding your translations.\n• Import and export localization data to XLIFF, CSV and Google Sheets.\n\nAdd localization to your projects using the Localization package to help make your applications more accessible to a wider audience.",
   "keywords": [
@@ -14,18 +14,59 @@
     "com.unity.nuget.newtonsoft-json": "3.0.2"
   },
   "relatedPackages": {
-    "com.unity.localization.tests": "1.5.9"
+    "com.unity.localization.tests": "1.5.10"
   },
   "_upm": {
-    "changelog": "### Fixed\n\n- Fixed Addressables Analyzer not checking the table addresses correctly. ([LOC-1260](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1260))\n- Fixed an issue where negative values could be treated differently, causing invalid plural formatting. ([LOC-1258](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1258))\n- Fixed exception when pushing to a Google Sheet that had 1 less row than required. ([LOC-1261](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1261))\n- Fixed iOS and Mac builds not including localization data due to an if UNITY_INCLUDE_TESTS exclusion. ([LOC-1270](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1270))"
+    "changelog": "### Fixed\n\n- Added missing `Serializable` attribute to `FormatterBase`. ([LOC-1282](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1282))\n- Added support for BCP 47 resource locale codes on Android 21+. (UUM-132466). ([UUM-132466](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-132466))\n- Adjusted the localization tables window so only the search bar shrinks/expands and all other buttons remain fixed. (LOC-1278)\n- Changed the Table Key ID Field so it is a selectable label and can now be copied. (LOC-1305)\n- Disabled the horizontal scroll in the ReorderableListView component. It was occasionally appearing when unnecessary and should not be required. ([LOC-1287](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1287))\n- Fix the samples not being included in the package data.\n- Fixed alignment of Project Locale identifier field. ([LOC-1277](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1277))\n- Fixed an issue where nested LocalizedStrings could not have their local variables queried. ([UUM-134944](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-134944))\n- Fixed an issue where the ExcludeEntryFromExport metadata would be ignored when exporting to CSV and XLIFF if the first table entry was null. ([UUM-136670](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-136670))\n- Fixed Android using the wrong app name locale codes for Indonesian and Hebrew. (LOC-1272)\n- Fixed the wrong group being used to resolve assets when a SharedGroup was assigned to the GroupResolver. ([UUM-135659](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-135659))\n- Fixed UI Builder picker so it saves the view state.\n- Improved fast enter playmode support. (UUM-131023)\n- Removed warning when using default localization settings. (LOC-1290)\n- When a new String Table is added, the IsSmart flag will now be propagated to its entries if it is already consistently set across all existing tables. ([LOC-1274](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1274))"
   },
   "upmCi": {
-    "footprint": "3ef8e6d0aa43c02e163738a6c6a8f009f3b19a22"
+    "footprint": "22dfbefae327a49cbe881a9d3bcfcbcda4e81e9e"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.localization@1.5/manual/index.html",
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/com.unity.localization.git",
     "type": "git",
-    "revision": "e926702332a191e2f8810036ebce6050a762b422"
-  }
+    "revision": "9664452f000bf726ba68f570eaf0cf9e6eaca2c7"
+  },
+  "samples": [
+    {
+      "displayName": "Creating Locales",
+      "description": "This sample shows how to Locales including custom ones through script.",
+      "path": "Samples~/CreatingLocales"
+    },
+    {
+      "displayName": "Loading Strings",
+      "description": "This sample shows multiple ways to fetch localized strings from the Localization system.",
+      "path": "Samples~/LoadingStrings"
+    },
+    {
+      "displayName": "Language Selection Menu (IMGUI)",
+      "description": "This sample shows how to implement a simple language selection menu using IMGUI. The sample also includes an example of overriding the LocalesProvider in order to provide a custom list of available Locales.",
+      "path": "Samples~/LocaleMenuIMGUI"
+    },
+    {
+      "displayName": "Language Selection Menu (UGUI)",
+      "description": "This sample shows how to implement a simple language selection menu using a UGUI Dropdown.",
+      "dependencies": {
+        "com.unity.ugui": "1.0.0"
+      },
+      "path": "Samples~/LocaleMenuUGUI"
+    },
+    {
+      "displayName": "Smart Strings - Persistent Variables",
+      "description": "These samples show how Persistent Variables can be used in Smart Strings and how custom variables can be created.",
+      "dependencies": {
+        "com.unity.ugui": "1.0.0"
+      },
+      "path": "Samples~/PersistentVariables"
+    },
+    {
+      "displayName": "Preloading Screen",
+      "description": "Preloading is a way to ensure that chosen Localization data is immediately available and does not require additional loading. This sample shows how to implement a loading screen to wait for preloading to complete.",
+      "dependencies": {
+        "com.unity.ugui": "1.0.0"
+      },
+      "path": "Samples~/PreloadingScreen"
+    }
+  ]
 }

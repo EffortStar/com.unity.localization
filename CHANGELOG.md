@@ -2,6 +2,26 @@
 
 All notable changes to this package will be documented in this file.
 
+## [1.5.10] - 2026-03-12
+
+### Fixed
+
+- Added missing `Serializable` attribute to `FormatterBase`. ([LOC-1282](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1282))
+- Added support for BCP 47 resource locale codes on Android 21+. (UUM-132466). ([UUM-132466](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-132466))
+- Adjusted the localization tables window so only the search bar shrinks/expands and all other buttons remain fixed. (LOC-1278)
+- Changed the Table Key ID Field so it is a selectable label and can now be copied. (LOC-1305)
+- Disabled the horizontal scroll in the ReorderableListView component. It was occasionally appearing when unnecessary and should not be required. ([LOC-1287](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1287))
+- Fix the samples not being included in the package data.
+- Fixed alignment of Project Locale identifier field. ([LOC-1277](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1277))
+- Fixed an issue where nested LocalizedStrings could not have their local variables queried. ([UUM-134944](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-134944))
+- Fixed an issue where the ExcludeEntryFromExport metadata would be ignored when exporting to CSV and XLIFF if the first table entry was null. ([UUM-136670](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-136670))
+- Fixed Android using the wrong app name locale codes for Indonesian and Hebrew. (LOC-1272)
+- Fixed the wrong group being used to resolve assets when a SharedGroup was assigned to the GroupResolver. ([UUM-135659](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-135659))
+- Fixed UI Builder picker so it saves the view state.
+- Improved fast enter playmode support. (UUM-131023)
+- Removed warning when using default localization settings. (LOC-1290)
+- When a new String Table is added, the IsSmart flag will now be propagated to its entries if it is already consistently set across all existing tables. ([LOC-1274](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1274))
+
 ## [1.5.9] - 2025-11-13
 
 ### Fixed
