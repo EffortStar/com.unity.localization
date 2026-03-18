@@ -486,7 +486,7 @@ namespace UnityEditor.Localization.UI
                 {
                     if (item is Placeholder ph)
                     {
-                        var id = $"{Table.GetInstanceID()}-{KeyId}-{nextId++}";
+                        var id = $"{InstanceIdHelper.GetInstanceId(Table)}-{KeyId}-{nextId++}";
                         m_FormatItemLookup.Add(id, ph);
                         result.Append($"<a href=\"{id}\">"); // TODO: Support Different selectors from Settings
                         result.Append("<b>");

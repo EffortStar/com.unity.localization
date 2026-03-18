@@ -2,6 +2,13 @@
 
 All notable changes to this package will be documented in this file.
 
+## [1.5.11] - 2026-03-18
+
+### Fixed
+
+- Removed use of UxmlFactory and UxmlTraits in Unity 6+.
+- Removed use of GetInstanceId from Unity 6.3+.
+
 ## [1.5.10] - 2026-03-12
 
 ### Fixed

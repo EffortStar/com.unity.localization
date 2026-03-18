@@ -328,7 +328,7 @@ namespace UnityEditor.Localization
                 throw new ArgumentNullException(nameof(table));
 
             // We use the instance id so as not to force the tables to be loaded.
-            var tableInstanceID = table.GetInstanceID();
+            var tableInstanceID = InstanceIdHelper.GetInstanceId(table);
             var index = m_Tables.FindIndex(t => t.GetInstanceId() == tableInstanceID);
 
             if (index == -1)
@@ -413,7 +413,7 @@ namespace UnityEditor.Localization
         public virtual bool ContainsTable(LocalizationTable table)
         {
             // We use the instance id so as not to force the tables to be loaded.
-            var tableInstanceID = table.GetInstanceID();
+            var tableInstanceID = InstanceIdHelper.GetInstanceId(table);
             return m_Tables.Any(t => t.GetInstanceId() == tableInstanceID);
         }
 
