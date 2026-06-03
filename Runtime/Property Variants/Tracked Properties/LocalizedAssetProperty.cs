@@ -34,7 +34,7 @@ namespace UnityEngine.Localization.PropertyVariants.TrackedProperties
                 return false;
 
             #if UNITY_EDITOR
-            if (!Application.isPlaying)
+            if (!PlaymodeState.IsPlaying)
             {
                 return true;
             }

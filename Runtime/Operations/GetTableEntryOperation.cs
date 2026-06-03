@@ -227,7 +227,7 @@ namespace UnityEngine.Localization.Operations
         {
             Complete(result, success, errorMsg);
 
-            if (m_AutoRelease && LocalizationSettings.Instance.IsPlaying)
+            if (m_AutoRelease && PlaymodeState.IsPlaying)
             {
                 // We need internal access for Handle here.
                 LocalizationBehaviour.ReleaseNextFrame(Handle);

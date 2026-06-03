@@ -27,7 +27,7 @@ namespace UnityEngine.Localization.Settings
         /// <param name="settings"></param>
         public void PostInitialization(LocalizationSettings settings)
         {
-            if (LocalizationSettings.Instance.IsPlayingOrWillChangePlaymode)
+            if (PlaymodeState.IsPlayingOrWillChangePlaymode)
             {
                 // Record the new selected locale so it can persist between runs
                 var selectedLocale = settings.GetSelectedLocale();

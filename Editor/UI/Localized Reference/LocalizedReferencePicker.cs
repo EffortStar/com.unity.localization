@@ -1,5 +1,6 @@
 #if ENABLE_SEARCH
 
+using UnityEditor.Localization.Bridge;
 using UnityEditor.Localization.Search;
 using UnityEditor.Search;
 using UnityEngine;
@@ -17,6 +18,7 @@ namespace UnityEditor.Localization.UI
         ISearchView m_View;
         bool m_Revert = true;
 
+        LocalizedReferencePropertyDrawer<TCollection>.Data m_Data;
         Object[] m_Targets;
         string m_TablePath;
         string m_EntryPath;
@@ -35,6 +37,16 @@ namespace UnityEditor.Localization.UI
             Selection.selectionChanged += CloseNoRevert; // Close if Undo changes the selection.
         }
 
+        /// <summary>
+        /// By default we assign the new value using a SerializedObject, however this can cause issues with IMGUI.
+        /// If we have the data we will assign the value to the deffered value so IMGUI can detect the changes (LOC-1237)
+        /// </summary>
+        /// <param name="data"></param>
+        public void SetPropertyDrawerData(LocalizedReferencePropertyDrawer<TCollection>.Data data)
+        {
+            m_Data = data;
+        }
+
         void CloseNoRevert()
         {
             m_Revert = false;
@@ -51,7 +63,7 @@ namespace UnityEditor.Localization.UI
                 hideAllGroup = false,
                 queryBuilderEnabled = true,
                 hideTabs = true,
-                flags = SearchViewFlags.DisableInspectorPreview | SearchViewFlags.OpenInBuilderMode,
+                flags = SearchViewFlags.DisableInspectorPreview | SearchViewFlags.OpenInBuilderMode | SearchViewFlags.ObjectPicker,
                 selectHandler = Select,
                 trackingHandler = Track
             };
@@ -88,6 +100,14 @@ namespace UnityEditor.Localization.UI
 
         void SetItem(LocalizationTableCollection collection, SharedTableData.SharedTableEntry entry)
         {
+            if (m_Data != null)
+            {
+                // Use the deferred approach.
+                m_Data.deferredSetReference = (collection as TCollection, entry);
+                InspectorWindowBridge.Repaint();
+                return;
+            }
+
             var so = new SerializedObject(m_Targets);
             var tableProp = so.FindProperty(m_TablePath);
             var entryProp = so.FindProperty(m_EntryPath);

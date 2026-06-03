@@ -1,4 +1,4 @@
-#if ADDRESSABLES_V1
+#if ADDRESSABLES_ANALYZE
 
 using System;
 using System.Collections.Generic;
@@ -105,7 +105,7 @@ namespace UnityEditor.Localization.Addressables
 
                     // Address
                     var expectedAddress = AddressHelper.GetTableAddress(table.TableCollectionName, table.LocaleIdentifier);
-                    if (!entry.labels.Contains(expectedLabel))
+                    if (entry.address != expectedAddress)
                     {
                         Results.Add(new AnalyzeResultWithFixAction
                         {

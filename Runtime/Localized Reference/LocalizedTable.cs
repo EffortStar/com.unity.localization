@@ -153,7 +153,7 @@ namespace UnityEngine.Localization
         /// [WebGL](https://docs.unity3d.com/Packages/com.unity.addressables@latest/index.html?subfolder=/manual/SynchronousAddressables.html#webgl).
         /// </summary>
         /// <returns></returns>
-        public TTable GetTable() => GetTableAsync().WaitForCompletion();
+        public TTable GetTable() => AsyncOperationUtility.SynchronousLoad(GetTableAsync());
 
         /// <summary>
         /// Force an update as if the <see cref="LocalizationSettings.SelectedLocale"/> had changed.

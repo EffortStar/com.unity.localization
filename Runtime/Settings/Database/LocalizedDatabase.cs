@@ -145,7 +145,7 @@ namespace UnityEngine.Localization.Settings
             {
                 #if UNITY_EDITOR
                 // Don't preload in Editor preview
-                if (!LocalizationSettings.Instance.IsPlayingOrWillChangePlaymode)
+                if (!PlaymodeState.IsPlayingOrWillChangePlaymode)
                     return AddressablesInterface.ResourceManager.CreateCompletedOperation(this, null);
                 #endif
 
@@ -427,7 +427,7 @@ namespace UnityEngine.Localization.Settings
         /// <param name="tableReference">The table identifier. Can be either the name of the table or the table collection name Guid.</param>
         /// <param name="locale">The <see cref="Locale"/> to load the table from, use null to default to cref="LocalizationSettings.SelectedLocale"/>.</param>
         /// <returns></returns>
-        public virtual TTable GetTable(TableReference tableReference, Locale locale = null) => GetTableAsync(tableReference, locale).WaitForCompletion();
+        public virtual TTable GetTable(TableReference tableReference, Locale locale = null) => AsyncOperationUtility.SynchronousLoad(GetTableAsync(tableReference, locale));
 
         /// <summary>
         /// Preloads the selected table. If the table is an <see cref="AssetTable"/> its assets will also be loaded.
@@ -447,7 +447,7 @@ namespace UnityEngine.Localization.Settings
             operation.Dependency = LocalizationSettings.InitializationOperation;
             var handle = AddressablesInterface.ResourceManager.StartOperation(operation, LocalizationSettings.InitializationOperation);
 
-            if (LocalizationSettings.Instance.IsPlaying)
+            if (PlaymodeState.IsPlaying)
                 handle.CompletedTypeless += ReleaseNextFrame;
 
             return handle;
@@ -475,7 +475,7 @@ namespace UnityEngine.Localization.Settings
             operation.Dependency = LocalizationSettings.InitializationOperation;
             var handle = AddressablesInterface.ResourceManager.StartOperation(operation, LocalizationSettings.InitializationOperation);
 
-            if (LocalizationSettings.Instance.IsPlaying)
+            if (PlaymodeState.IsPlaying)
                 handle.CompletedTypeless += ReleaseNextFrame;
 
             return handle;
@@ -641,7 +641,7 @@ namespace UnityEngine.Localization.Settings
             operation.Dependency = LocalizationSettings.InitializationOperation;
             var handle = AddressablesInterface.ResourceManager.StartOperation(operation, LocalizationSettings.InitializationOperation);
 
-            if (LocalizationSettings.Instance.IsPlaying)
+            if (PlaymodeState.IsPlaying)
                 handle.CompletedTypeless += ReleaseNextFrame;
 
             return handle;
@@ -714,7 +714,7 @@ namespace UnityEngine.Localization.Settings
         /// <returns>The table entry result which contains the table </returns>
         public virtual TableEntryResult GetTableEntry(TableReference tableReference, TableEntryReference tableEntryReference, Locale locale = null, FallbackBehavior fallbackBehavior = FallbackBehavior.UseProjectSettings)
         {
-            return GetTableEntryAsync(tableReference, tableEntryReference, locale, fallbackBehavior).WaitForCompletion();
+            return AsyncOperationUtility.SynchronousLoad(GetTableEntryAsync(tableReference, tableEntryReference, locale, fallbackBehavior));
         }
 
         internal AsyncOperationHandle<SharedTableData> GetSharedTableData(Guid tableNameGuid)

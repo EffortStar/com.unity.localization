@@ -4,9 +4,7 @@ using UnityEditor;
 using UnityEditor.Localization;
 using UnityEngine;
 using UnityEngine.Localization;
-using UnityEngine.Localization.SmartFormat.Core.Extensions;
 using UnityEngine.Localization.Tables;
-using Random = UnityEngine.Random;
 
 public class SmartStringSamples
 {
@@ -304,6 +302,19 @@ public class SmartStringSamples
             new[] { "Mohamed" }
             #endregion
         };
+
+        #region plural-custom-formatter
+        UnityEngine.Localization.SmartFormat.Utilities.PluralRules.IsoLangToDelegate.Add("ru-custom", (val, count) =>
+        {
+            // evaluate normal Russian rules
+            var rule = UnityEngine.Localization.SmartFormat.Utilities.PluralRules.IsoLangToDelegate["ru"];
+            var index = rule(val, count);
+
+            // Add your fallback here.
+            // Clamp it to our expected index to prevent the exception.
+            return Mathf.Clamp(index, 0, 1);
+        });
+        #endregion
     }
 
     public static void SubStringFormatterArgument()

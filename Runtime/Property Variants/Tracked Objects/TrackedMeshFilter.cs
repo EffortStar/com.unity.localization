@@ -57,7 +57,7 @@ namespace UnityEngine.Localization.PropertyVariants.TrackedObjects
             else if (property is LocalizedAssetProperty localizedAssetProperty && !localizedAssetProperty.LocalizedObject.IsEmpty)
             {
                 m_CurrentOperation = localizedAssetProperty.LocalizedObject.LoadAssetAsync<Mesh>();
-                 
+
                 if (m_CurrentOperation.IsDone)
                 {
                     MeshOperationCompleted(m_CurrentOperation);
@@ -65,7 +65,7 @@ namespace UnityEngine.Localization.PropertyVariants.TrackedObjects
                 #if !UNITY_WEBGL // WebGL does not support WaitForCompletion
                 else if (localizedAssetProperty.LocalizedObject.ForceSynchronous)
                 {
-                    var result = m_CurrentOperation.WaitForCompletion();
+                    AsyncOperationUtility.SynchronousLoad(m_CurrentOperation);
                     MeshOperationCompleted(m_CurrentOperation);
                 }
                 #endif

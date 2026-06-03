@@ -190,101 +190,169 @@ namespace UnityEngine.Localization.SmartFormat.Utilities
         private static PluralRuleDelegate Singular => (n, c) => 0;
         private static PluralRuleDelegate DualOneOther => (n, c) =>
         {
-            if (c == 2) return n == 1 ? 0 : 1;
-            if (c == 3) return n == 0 ? 0 : n == 1 ? 1 : 2;
+            // See https://github.com/axuno/SmartFormat/issues/503
+            var absN = Math.Abs(n);
+            if (c == 2) return absN == 1 ? 0 : 1;
+            if (c == 3) return absN == 0 ? 0 : absN == 1 ? 1 : 2;
             if (c == 4) return n < 0 ? 0 : n == 0 ? 1 : n == 1 ? 2 : 3;
             return -1;
-        };// Dual: one (n == 1), other
-        private static PluralRuleDelegate DualWithZero => (n, c) => n == 0 || n == 1 ? 0 : 1; // DualWithZero: one (n == 0..1), other
-        private static PluralRuleDelegate DualFromZeroToTwo => (n, c) => n == 0 || n == 1 ? 0 : 1; // DualFromZeroToTwo: one (n == 0..2 fractionate and n != 2), other
-        private static PluralRuleDelegate TripleOneTwoOther => (n, c) => n == 1 ? 0 : n == 2 ? 1 : 2; // Triple: one (n == 1), two (n == 2), other
+        }; // Dual: one (n == 1), other
+        private static PluralRuleDelegate DualWithZero => (n, c) =>
+        {
+            n = Math.Abs(n);
+            return n == 0 || n == 1 ? 0 : 1;
+        }; // DualWithZero: one (n == 0..1), other
+        private static PluralRuleDelegate DualFromZeroToTwo => (n, c) =>
+        {
+            n = Math.Abs(n);
+            return n == 0 || n == 1 ? 0 : 1;
+        }; // DualFromZeroToTwo: one (n == 0..2 fractionate and n != 2), other
+        private static PluralRuleDelegate TripleOneTwoOther => (n, c) =>
+        {
+            n = Math.Abs(n);
+            return n == 1 ? 0 : n == 2 ? 1 : 2;
+        }; // Triple: one (n == 1), two (n == 2), other
         private static PluralRuleDelegate RussianSerboCroatian => (n, c) =>
-        n % 10 == 1 && n % 100 != 11 ? 0 :     // one
-        (n % 10).Between(2, 4) && !(n % 100).Between(12, 14) ? 1 :     // few
-        2;     // Russian & Serbo-Croatian
+        {
+            n = Math.Abs(n);
+            return n % 10 == 1 && n % 100 != 11 ? 0 :     // one
+            (n % 10).Between(2, 4) && !(n % 100).Between(12, 14) ? 1 :     // few
+            2;
+        }; // Russian & Serbo-Croatian
         private static PluralRuleDelegate Arabic => (n, c) =>
-        n == 0 ? 0 :     // zero
-        n == 1 ? 1 :     // one
-        n == 2 ? 2 :     // two
-        (n % 100).Between(3, 10) ? 3 :     // few
-        (n % 100).Between(11, 99) ? 4 :     // many
-        5;     // other
+        {
+            n = Math.Abs(n);
+            return n == 0 ? 0 :             // zero
+            n == 1 ? 1 :                    // one
+            n == 2 ? 2 :                    // two
+            (n % 100).Between(3, 10) ? 3 :  // few
+            (n % 100).Between(11, 99) ? 4 : // many
+            5;                              // other
+        };
         private static PluralRuleDelegate Breton => (n, c) =>
-        n == 0 ? 0 :     // zero
-        n == 1 ? 1 :     // one
-        n == 2 ? 2 :     // two
-        n == 3 ? 3 :     // few
-        n == 6 ? 4 :     // many
-        5;     // other
+        {
+            n = Math.Abs(n);
+            return n == 0 ? 0 : // zero
+            n == 1 ? 1 :        // one
+            n == 2 ? 2 :        // two
+            n == 3 ? 3 :        // few
+            n == 6 ? 4 :        // many
+            5;                  // other
+        };
         private static PluralRuleDelegate Czech => (n, c) =>
-        n == 1 ? 0 :     // one
-        n.Between(2, 4) ? 1 :     // few
-        2;
+        {
+            n = Math.Abs(n);
+            return n == 1 ? 0 :   // one
+            n.Between(2, 4) ? 1 : // few
+            2;
+        };
         private static PluralRuleDelegate Welsh => (n, c) =>
-        n == 0 ? 0 :     // zero
-        n == 1 ? 1 :     // one
-        n == 2 ? 2 :     // two
-        n == 3 ? 3 :     // few
-        n == 6 ? 4 :     // many
-        5;
+        {
+            n = Math.Abs(n);
+            return n == 0 ? 0 : // zero
+            n == 1 ? 1 :        // one
+            n == 2 ? 2 :        // two
+            n == 3 ? 3 :        // few
+            n == 6 ? 4 :        // many
+            5;
+        };
         private static PluralRuleDelegate Manx => (n, c) =>
-        (n % 10).Between(1, 2) || n % 20 == 0
-        ? 0
-        :         // one
-        1;
+        {
+            n = Math.Abs(n);
+            return (n % 10).Between(1, 2) || n % 20 == 0
+            ? 0
+            : // one
+            1;
+        };
         private static PluralRuleDelegate Langi => (n, c) =>
-        n == 0 ? 0 :     // zero
-        n > 0 && n < 2 ? 1 :     // one
-        2;
+        {
+            n = Math.Abs(n);
+            return n == 0 ? 0 :  // zero
+            n > 0 && n < 2 ? 1 : // one
+            2;
+        };
         private static PluralRuleDelegate Lithuanian => (n, c) =>
-        n % 10 == 1 && !(n % 100).Between(11, 19) ? 0 :     // one
-        (n % 10).Between(2, 9) && !(n % 100).Between(11, 19) ? 1 :     // few
-        2;
+        {
+            n = Math.Abs(n);
+            return n % 10 == 1 && !(n % 100).Between(11, 19) ? 0 :     // one
+            (n % 10).Between(2, 9) && !(n % 100).Between(11, 19) ? 1 :     // few
+            2;
+        };
         private static PluralRuleDelegate Latvian => (n, c) =>
-        n == 0 ? 0 :     // zero
-        n % 10 == 1 && n % 100 != 11 ? 1 :
-        2;
+        {
+            n = Math.Abs(n);
+            return n == 0 ? 0 : // zero
+            n % 10 == 1 && n % 100 != 11 ? 1 :
+            2;
+        };
         private static PluralRuleDelegate Macedonian => (n, c) =>
-        n % 10 == 1 && n != 11
-        ? 0
-        :         // one
-        1;
+        {
+            n = Math.Abs(n);
+            return n % 10 == 1 && n != 11
+            ? 0
+            : // one
+            1;
+        };
         private static PluralRuleDelegate Moldavian => (n, c) =>
-        n == 1 ? 0 :     // one
-        n == 0 || n != 1 && (n % 100).Between(1, 19) ? 1 :     // few
-        2;
+        {
+            n = Math.Abs(n);
+            return n == 1 ? 0 : // one
+            n == 0 || n != 1 && (n % 100).Between(1, 19) ? 1 : // few
+            2;
+        };
         private static PluralRuleDelegate Maltese => (n, c) =>
-        n == 1 ? 0 :     // one
-        n == 0 || (n % 100).Between(2, 10) ? 1 :     // few
-        (n % 100).Between(11, 19) ? 2 :     // many
-        3;
+        {
+            n = Math.Abs(n);
+            return n == 1 ? 0 :                      // one
+            n == 0 || (n % 100).Between(2, 10) ? 1 : // few
+            (n % 100).Between(11, 19) ? 2 :          // many
+            3;
+        };
         private static PluralRuleDelegate Polish => (n, c) =>
-        n == 1 ? 0 :     // one
-        (n % 10).Between(2, 4) && !(n % 100).Between(12, 14) ? 1 :     // few
-        (n % 10).Between(0, 1) || (n % 10).Between(5, 9) || (n % 100).Between(12, 14) ? 2 :     // many
-        3;
+        {
+            n = Math.Abs(n);
+            return n == 1 ? 0 : // one
+            (n % 10).Between(2, 4) && !(n % 100).Between(12, 14) ? 1 : // few
+            (n % 10).Between(0, 1) || (n % 10).Between(5, 9) || (n % 100).Between(12, 14) ? 2 : // many
+            3;
+        };
         private static PluralRuleDelegate Romanian => (n, c) =>
-        n == 1 ? 0 :     // one
-        n == 0 || (n % 100).Between(1, 19) ? 1 :     // few
-        2;
+        {
+            n = Math.Abs(n);
+            return n == 1 ? 0 : // one
+            n == 0 || (n % 100).Between(1, 19) ? 1 : // few
+            2;
+        };
         private static PluralRuleDelegate Tachelhit => (n, c) =>
-        n >= 0 && n <= 1 ? 0 :     // one
-        n.Between(2, 10) ? 1 :     // few
-        2;
+        {
+            n = Math.Abs(n);
+            return n >= 0 && n <= 1 ? 0 : // one
+            n.Between(2, 10) ? 1 : // few
+            2;
+        };
         private static PluralRuleDelegate Slovak => (n, c) =>
-        n == 1 ? 0 :     // one
-        n.Between(2, 4) ? 1 :     // few
-        2;
+        {
+            n = Math.Abs(n);
+            return n == 1 ? 0 :   // one
+            n.Between(2, 4) ? 1 : // few
+            2;
+        };
         private static PluralRuleDelegate Slovenian => (n, c) =>
-        n % 100 == 1 ? 0 :     // one
-        n % 100 == 2 ? 1 :     // two
-        (n % 100).Between(3, 4) ? 2 :     // few
-        3;
+        {
+            n = Math.Abs(n);
+            return n % 100 == 1 ? 0 :     // one
+            n % 100 == 2 ? 1 :            // two
+            (n % 100).Between(3, 4) ? 2 : // few
+            3;
+        };
         private static PluralRuleDelegate CentralMoroccoTamazight => (n, c) =>
-        n.Between(0, 1) || n.Between(11, 99)
-        ? 0
-        :         // one
-        1;
+        {
+            n = Math.Abs(n);
+            return n.Between(0, 1) || n.Between(11, 99)
+            ? 0
+            : // one
+            1;
+        };
 
         /// <summary>
         /// This delegate determines which singular or plural word should be chosen for the given quantity.

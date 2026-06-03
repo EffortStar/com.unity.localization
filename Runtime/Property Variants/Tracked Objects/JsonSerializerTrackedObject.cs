@@ -101,7 +101,7 @@ namespace UnityEngine.Localization.PropertyVariants.TrackedObjects
 
             void OnAssetLoaded(AsyncOperationHandle<Object> asyncOperationHandle)
             {
-                jsonValue.Value = asyncOperationHandle.Result != null ? asyncOperationHandle.Result.GetInstanceID() : 0;
+                jsonValue.Value = InstanceIdHelper.GetInstanceIdString(asyncOperationHandle.Result);
 
                 // Clear
                 jsonValue = null;
@@ -150,7 +150,7 @@ namespace UnityEngine.Localization.PropertyVariants.TrackedObjects
                     continue;
 
                 #if UNITY_EDITOR
-                if (!Application.isPlaying)
+                if (!PlaymodeState.IsPlaying)
                     VariantsPropertyDriver.RegisterProperty(Target, property.PropertyPath);
                 #endif
 
@@ -180,7 +180,8 @@ namespace UnityEngine.Localization.PropertyVariants.TrackedObjects
                     {
                         objectProperty.GetValue(variantLocale.Identifier, defaultLocaleIdentifier, out var value);
                         var jsonProperty = (JValue)GetPropertyFromPath(property.PropertyPath + instanceIdField, jsonObject);
-                        jsonProperty.Value = value != null ? value.GetInstanceID() : 0;
+
+                        jsonProperty.Value = InstanceIdHelper.GetInstanceIdString(value);
                         propertyChanged = true;
                         break;
                     }
@@ -201,7 +202,7 @@ namespace UnityEngine.Localization.PropertyVariants.TrackedObjects
                         #if !UNITY_WEBGL // WebGL does not support WaitForCompletion
                         else if (localizedStringProperty.LocalizedString.ForceSynchronous)
                         {
-                            jsonProperty.Value = stringOp.WaitForCompletion();
+                            jsonProperty.Value = AsyncOperationUtility.SynchronousLoad(stringOp);
                             AddressablesInterface.Release(stringOp);
                         }
                         #endif
@@ -228,15 +229,15 @@ namespace UnityEngine.Localization.PropertyVariants.TrackedObjects
                         if (assetOp.IsDone)
                         {
                             var result = assetOp.Result;
-                            jsonProperty.Value = result != null ? result.GetInstanceID() : 0;
+                            jsonProperty.Value = InstanceIdHelper.GetInstanceIdString(result);
                             AddressablesInterface.Release(assetOp);
-                            
+
                         }
                         #if !UNITY_WEBGL // WebGL does not support WaitForCompletion
                         else if (localizedAssetProperty.LocalizedObject.ForceSynchronous)
                         {
-                            var result = assetOp.WaitForCompletion();
-                            jsonProperty.Value = result != null ? result.GetInstanceID() : 0;
+                            var result = AsyncOperationUtility.SynchronousLoad(assetOp);
+                            jsonProperty.Value = InstanceIdHelper.GetInstanceIdString(result);
                             AddressablesInterface.Release(assetOp);
                         }
                         #endif

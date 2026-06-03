@@ -35,8 +35,14 @@ namespace UnityEditor.Localization.PropertyVariants
 
                 stream.GetChangeGameObjectStructureEvent(i, out var eventArgs);
 
-                if (!(EditorUtility.InstanceIDToObject(eventArgs.instanceId) is GameObject goAsset
-                      && goAsset.GetComponent<GameObjectLocalizer>() is {} objectLocalizer)) continue;
+                #if UNITY_6000_5_OR_NEWER
+                if (!(EditorUtility.EntityIdToObject(eventArgs.entityId)
+                #elif UNITY_6000_3_OR_NEWER
+                if (!(EditorUtility.EntityIdToObject(eventArgs.instanceId)
+                #else
+                if (!(EditorUtility.InstanceIDToObject(eventArgs.instanceId)
+                #endif
+                is GameObject goAsset && goAsset.GetComponent<GameObjectLocalizer>() is { } objectLocalizer)) continue;
 
                 var removedComponents = objectLocalizer.TrackedObjects.Where(t => t.Target == null).ToList();
                 if (removedComponents.Count == 0)
@@ -70,7 +76,7 @@ namespace UnityEditor.Localization.PropertyVariants
                 }
             }
 
-            if (Application.isPlaying || !LocalizationSettings.HasSettings || LocalizationSettings.SelectedLocale == null)
+            if (PlaymodeState.IsPlaying || !LocalizationSettings.HasSettings || LocalizationSettings.SelectedLocale == null)
                 return modifications;
 
             // We want to create variant data in our GameObjectLocalizer however we also need to create Undo records for these changes.

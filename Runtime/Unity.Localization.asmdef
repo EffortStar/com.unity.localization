@@ -42,6 +42,16 @@
             "define": "ENABLE_PROPERTY_VARIANTS"
         },
         {
+            "name": "Unity",
+            "expression": "[2021.3,2022.1.0]",
+            "define": "ENABLE_DEVICE_SIMULATOR"
+        },
+        {
+            "name": "Unity",
+            "expression": "2022.3",
+            "define": "ENABLE_DEVICE_SIMULATOR"
+        },
+        {
             "name": "com.unity.ugui",
             "expression": "3.0.0",
             "define": "NO_TMP_FONTASSET"

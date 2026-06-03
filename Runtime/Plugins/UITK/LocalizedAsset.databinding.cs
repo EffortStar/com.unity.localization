@@ -1,5 +1,6 @@
 #if MODULE_UITK && UNITY_2023_3_OR_NEWER
 
+using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
 using UnityEngine.UIElements;
 
@@ -66,7 +67,7 @@ namespace UnityEngine.Localization
 
             #if UNITY_EDITOR
             // When not in playmode and not previewing a language we want to show something, so we revert to the project locale.
-            if (!Application.isPlaying && LocaleOverride == null && LocalizationSettings.SelectedLocale == null)
+            if (!PlaymodeState.IsPlaying && LocaleOverride == null && LocalizationSettings.SelectedLocale == null)
             {
                 LocaleOverride = LocalizationSettings.ProjectLocale;
             }

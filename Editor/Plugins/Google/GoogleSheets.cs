@@ -293,7 +293,7 @@ namespace UnityEditor.Localization.Plugins.Google
 
                 // Do we need to resize the sheet?
                 var requiredRows = collection.SharedData.Entries.Count + 1; // + 1 for the header row
-                if (collection.SharedData.Entries.Count > rowCount)
+                if (requiredRows > rowCount)
                 {
                     reporter?.ReportProgress("Generating sheet resize request", 0.15f);
                     requests.Add(ResizeRow(sheetId, requiredRows));
@@ -357,7 +357,7 @@ namespace UnityEditor.Localization.Plugins.Google
 
                 // Do we need to resize the sheet?
                 var requiredRows = collection.SharedData.Entries.Count + 1; // + 1 for the header row
-                if (collection.SharedData.Entries.Count > rowCount)
+                if (requiredRows > rowCount)
                 {
                     reporter?.ReportProgress("Generating sheet resize request", 0.15f);
                     requests.Add(ResizeRow(sheetId, requiredRows));
@@ -600,7 +600,7 @@ namespace UnityEditor.Localization.Plugins.Google
             for (int row = skipFirstRow ? 1 : 0; row < rowCount; row++)
             {
                 var keyRowData = columns[0].rowData[row];
-                var keyData = keyRowData?.Values ? [keyValueIndex];
+                var keyData = keyRowData?.Values?.ElementAtOrDefault(keyValueIndex);
                 var keyValue = keyData?.FormattedValue;
                 var keyNote = keyData?.Note;
 
