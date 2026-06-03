@@ -8,7 +8,16 @@ using UnityEngine.Localization;
 using UnityEngine.Localization.Tables;
 using UnityEngine.Pool;
 using Object = UnityEngine.Object;
+
+#if !UNITY_6000_2_OR_NEWER
+using TreeViewItem = UnityEditor.IMGUI.Controls.TreeViewItem;
 using TreeView = UnityEditor.IMGUI.Controls.TreeView;
+using TreeViewState = UnityEditor.IMGUI.Controls.TreeViewState;
+#else
+using TreeViewItem = UnityEditor.IMGUI.Controls.TreeViewItem<int>;
+using TreeView = UnityEditor.IMGUI.Controls.TreeView<int>;
+using TreeViewState = UnityEditor.IMGUI.Controls.TreeViewState<int>;
+#endif
 
 namespace UnityEditor.Localization.UI
 {
@@ -521,7 +530,7 @@ namespace UnityEditor.Localization.UI
             return m_VisibleRows;
         }
 
-        protected virtual void DrawKeyIdField(Rect cellRect, T2 keyItem) => EditorGUI.LabelField(cellRect, keyItem.KeyId.ToString());
+        protected virtual void DrawKeyIdField(Rect cellRect, T2 keyItem) => EditorGUI.SelectableLabel(cellRect, keyItem.KeyId.ToString());
 
         protected virtual void DrawKeyField(Rect cellRect, T2 keyItem)
         {

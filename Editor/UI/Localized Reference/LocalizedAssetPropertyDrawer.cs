@@ -98,8 +98,12 @@ namespace UnityEditor.Localization.UI
                 return;
             }
 
-            var provider = new AssetTableSearchProvider(data.assetType);
-            var context = UnityEditor.Search.SearchService.CreateContext(provider, FilterIds.AssetTableProviderFilter);
+            #if UNITY_2022_3_OR_NEWER
+            var context = UnityEditor.Search.SearchService.CreateContext(FilterIds.AssetTableProvider, FilterIds.AssetTableProviderFilter, UnityEditor.Search.SearchFlags.UseSessionSettings);
+            #else
+            var context = UnityEditor.Search.SearchService.CreateContext(new AssetTableSearchProvider(data.assetType), FilterIds.AssetTableProviderFilter);
+            #endif
+
             var picker = new LocalizedReferencePicker<StringTableCollection>(context, "string table entry", data.tableReference.Property, data.tableEntryReference.Property);
             picker.Show();
         }

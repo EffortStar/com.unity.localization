@@ -153,14 +153,14 @@ namespace UnityEngine.Localization.Tables
         public string GetLocalizedString(IFormatProvider formatProvider, IList<object> args, PseudoLocale pseudoLocale)
         {
             if (formatProvider == null)
-                formatProvider = LocalizationSettings.AvailableLocales?.GetLocale(Table.LocaleIdentifier)?.Formatter;
+                formatProvider = LocalizationSettings.AvailableLocales?.GetLocale(Table.LocaleIdentifier);
 
             string translatedText = null;
 
             if (IsSmart)
             {
                 #if UNITY_EDITOR
-                if (!LocalizationSettings.Instance.IsPlayingOrWillChangePlaymode)
+                if (!PlaymodeState.IsPlayingOrWillChangePlaymode)
                 {
                     var localVariables = m_FormatCache?.LocalVariables;
                     m_FormatCache = null;

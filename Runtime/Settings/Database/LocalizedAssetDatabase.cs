@@ -45,7 +45,7 @@ namespace UnityEngine.Localization.Settings
         /// <returns></returns>
         public TObject GetLocalizedAsset<TObject>(TableEntryReference tableEntryReference, Locale locale = null) where TObject : Object
         {
-            return GetLocalizedAssetAsync<TObject>(GetDefaultTable(), tableEntryReference, locale).WaitForCompletion();
+            return AsyncOperationUtility.SynchronousLoad(GetLocalizedAssetAsync<TObject>(GetDefaultTable(), tableEntryReference, locale));
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace UnityEngine.Localization.Settings
         /// <returns></returns>
         public virtual TObject GetLocalizedAsset<TObject>(TableReference tableReference, TableEntryReference tableEntryReference, Locale locale = null) where TObject : Object
         {
-            return GetLocalizedAssetAsyncInternal<TObject>(tableReference, tableEntryReference, locale).WaitForCompletion();
+            return AsyncOperationUtility.SynchronousLoad(GetLocalizedAssetAsyncInternal<TObject>(tableReference, tableEntryReference, locale));
         }
 
         /// <summary>

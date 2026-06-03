@@ -139,7 +139,7 @@ namespace UnityEditor.Localization.UI
             var prop = new StringPropertyData()
             {
                 entryNameLabel = Styles.entryName,
-                expandedSessionKey = $"{property.serializedObject.targetObject.GetInstanceID()}-{property.propertyPath}",
+                expandedSessionKey = $"{InstanceIdHelper.GetInstanceIdString(property.serializedObject.targetObject)}-{property.propertyPath}",
                 localizedString = property.GetActualObjectForSerializedProperty<LocalizedString>(fieldInfo),
                 variableArguments = new ReorderableListExtended(property.serializedObject, property.FindPropertyRelative("m_LocalVariables"))
                 {
@@ -292,9 +292,14 @@ namespace UnityEditor.Localization.UI
                 return;
             }
 
-            var provider = new StringTableSearchProvider();
-            var context = UnityEditor.Search.SearchService.CreateContext(provider, FilterIds.StringTableProviderFilter);
+            #if UNITY_2022_3_OR_NEWER
+            var context = UnityEditor.Search.SearchService.CreateContext(FilterIds.StringTableProvider, FilterIds.StringTableProviderFilter, UnityEditor.Search.SearchFlags.UseSessionSettings);
+            #else
+            var context = UnityEditor.Search.SearchService.CreateContext(new StringTableSearchProvider(), FilterIds.StringTableProviderFilter);
+            #endif
+
             var picker = new LocalizedReferencePicker<StringTableCollection>(context, "string table entry", data.tableReference.Property, data.tableEntryReference.Property);
+            picker.SetPropertyDrawerData(data);
             picker.Show();
         }
         #endif

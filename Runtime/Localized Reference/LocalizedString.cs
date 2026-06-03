@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using UnityEngine.Localization.Settings;
 using UnityEngine.Localization.SmartFormat.Core.Extensions;
 using UnityEngine.Localization.SmartFormat.Core.Formatting;
@@ -56,10 +55,10 @@ namespace UnityEngine.Localization
         readonly Dictionary<string, VariableNameValuePair> m_VariableLookup = new Dictionary<string, VariableNameValuePair>();
 
         readonly List<IVariableValueChanged> m_UsedVariables = new List<IVariableValueChanged>();
-        Action<IVariable> m_OnVariableChanged;
-        Action<Locale> m_SelectedLocaleChanged;
-        Action<AsyncOperationHandle<LocalizedStringDatabase.TableEntryResult>> m_AutomaticLoadingCompleted;
-        Action<AsyncOperationHandle<LocalizedDatabase<StringTable, StringTableEntry>.TableEntryResult>> m_CompletedSourceValue;
+        readonly Action<IVariable> m_OnVariableChanged;
+        readonly Action<Locale> m_SelectedLocaleChanged;
+        readonly Action<AsyncOperationHandle<LocalizedStringDatabase.TableEntryResult>> m_AutomaticLoadingCompleted;
+        readonly Action<AsyncOperationHandle<LocalizedDatabase<StringTable, StringTableEntry>.TableEntryResult>> m_CompletedSourceValue;
         bool m_WaitingForVariablesEndUpdate;
 
         /// <inheritdoc/>
@@ -141,6 +140,7 @@ namespace UnityEngine.Localization
                 {
                     LocalizationSettings.SelectedLocaleChanged -= m_SelectedLocaleChanged;
                     ClearLoadingOperation();
+                    ClearVariableListeners();
                 }
             }
         }
@@ -266,7 +266,7 @@ namespace UnityEngine.Localization
         /// [WebGL](https://docs.unity3d.com/Packages/com.unity.addressables@latest/index.html?subfolder=/manual/SynchronousAddressables.html#webgl).
         /// </summary>
         /// <returns>The localized string for the <see cref="LocalizationSettings.SelectedLocale"/> or <see cref="LocalizedReference.LocaleOverride"/> if it is not <see langword="null"/>.</returns>
-        public string GetLocalizedString() => GetLocalizedStringAsync().WaitForCompletion();
+        public string GetLocalizedString() => AsyncOperationUtility.SynchronousLoad(GetLocalizedStringAsync());
 
         /// <summary>
         /// Provides a translated string from a <see cref="StringTable"/> with the <see cref="TableReference"/> and
@@ -285,7 +285,7 @@ namespace UnityEngine.Localization
         /// </summary>
         /// <param name="arguments">The arguments to pass into the Smart String formatter or [String.Format](https://docs.microsoft.com/en-us/dotnet/api/system.string.format).</param>
         /// <returns>The localized string for the <see cref="LocalizationSettings.SelectedLocale"/> or <see cref="LocalizedReference.LocaleOverride"/> if it is not <see langword="null"/>.</returns>
-        public string GetLocalizedString(params object[] arguments) => GetLocalizedStringAsync((IList<object>)arguments).WaitForCompletion();
+        public string GetLocalizedString(params object[] arguments) => AsyncOperationUtility.SynchronousLoad(GetLocalizedStringAsync((IList<object>)arguments));
 
         /// <summary>
         /// Provides a translated string from a <see cref="StringTable"/> with the <see cref="TableReference"/> and
@@ -293,7 +293,7 @@ namespace UnityEngine.Localization
         /// </summary>
         /// <param name="arguments">The arguments to pass into the Smart String formatter or [String.Format](https://docs.microsoft.com/en-us/dotnet/api/system.string.format).</param>
         /// <returns>The localized string for the <see cref="LocalizationSettings.SelectedLocale"/> or <see cref="LocalizedReference.LocaleOverride"/> if it is not <see langword="null"/>.</returns>
-        public string GetLocalizedString(IList<object> arguments) => GetLocalizedStringAsync(arguments).WaitForCompletion();
+        public string GetLocalizedString(IList<object> arguments) => AsyncOperationUtility.SynchronousLoad(GetLocalizedStringAsync(arguments));
 
         /// <summary>
         /// Provides a translated string from a <see cref="StringTable"/> with the <see cref="TableReference"/> and
@@ -500,11 +500,13 @@ namespace UnityEngine.Localization
         {
             readonly string m_Localized;
             readonly StringTableEntry m_StringTableEntry;
+            readonly IVariableGroup m_LocalVariables;
 
-            public StringTableEntryVariable(string localized, StringTableEntry entry)
+            public StringTableEntryVariable(string localized, StringTableEntry entry, IVariableGroup localVariables)
             {
                 m_Localized = localized;
                 m_StringTableEntry = entry;
+                m_LocalVariables = localVariables;
             }
 
             public bool TryGetValue(string key, out IVariable value)
@@ -517,6 +519,9 @@ namespace UnityEngine.Localization
                         return true;
                     }
                 }
+
+                if (m_LocalVariables != null && m_LocalVariables.TryGetValue(key, out value))
+                    return true;
 
                 value = null;
                 return false;
@@ -587,7 +592,7 @@ namespace UnityEngine.Localization
             if (!entry.IsSmart)
             {
                 var result = LocalizationSettings.StringDatabase.GenerateLocalizedString(operation.Result.Table, entry, TableReference, TableEntryReference, locale, Arguments);
-                return new StringTableEntryVariable(result, entry);
+                return new StringTableEntryVariable(result, entry, this);
             }
 
             var formatCache = entry?.GetOrCreateFormatCache();
@@ -625,7 +630,7 @@ namespace UnityEngine.Localization
                     // We may need to consider keeping multiple lists of callbacks in the future.
                     UpdateVariableListeners(formatCache.VariableTriggers);
                 }
-                return new StringTableEntryVariable(result, entry);
+                return new StringTableEntryVariable(result, entry, this);
             }
         }
 
@@ -642,15 +647,19 @@ namespace UnityEngine.Localization
             ValueChanged?.Invoke(this);
         }
 
-        void UpdateVariableListeners(List<IVariableValueChanged> variables)
+        void ClearVariableListeners()
         {
-            // Unsubscribe from any old ones
             foreach (var gv in m_UsedVariables)
             {
                 gv.ValueChanged -= m_OnVariableChanged;
             }
-
             m_UsedVariables.Clear();
+        }
+
+        void UpdateVariableListeners(List<IVariableValueChanged> variables)
+        {
+            ClearVariableListeners();
+
             if (variables == null)
                 return;
 
@@ -728,7 +737,7 @@ namespace UnityEngine.Localization
             m_CurrentTableEntry = TableEntryReference;
 
             // Don't update if we have no selected Locale
-            if (!LocalizationSettings.Instance.IsPlayingOrWillChangePlaymode && LocaleOverride == null && LocalizationSettings.SelectedLocale == null)
+            if (!PlaymodeState.IsPlayingOrWillChangePlaymode && LocaleOverride == null && LocalizationSettings.SelectedLocale == null)
                 return;
             #endif
 
@@ -736,7 +745,7 @@ namespace UnityEngine.Localization
             {
                 #if UNITY_EDITOR
                 // If we are empty and playing or previewing then we should force an update.
-                if (!LocalizationSettings.Instance.IsPlayingOrWillChangePlaymode)
+                if (!PlaymodeState.IsPlayingOrWillChangePlaymode)
                     InvokeChangeHandler(null);
                 #endif
                 return;
@@ -818,6 +827,7 @@ namespace UnityEngine.Localization
         {
             m_ChangeHandler.Clear();
             ClearLoadingOperation();
+            ClearVariableListeners();
             LocalizationSettings.SelectedLocaleChanged -= m_SelectedLocaleChanged;
             GC.SuppressFinalize(this);
         }

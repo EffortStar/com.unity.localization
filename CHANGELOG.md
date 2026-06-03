@@ -2,6 +2,78 @@
 
 All notable changes to this package will be documented in this file.
 
+## [1.5.11] - 2026-03-18
+
+### Fixed
+
+- Removed use of UxmlFactory and UxmlTraits in Unity 6+.
+- Removed use of GetInstanceId from Unity 6.3+.
+
+## [1.5.10] - 2026-03-12
+
+### Fixed
+
+- Added missing `Serializable` attribute to `FormatterBase`. ([LOC-1282](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1282))
+- Added support for BCP 47 resource locale codes on Android 21+. (UUM-132466). ([UUM-132466](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-132466))
+- Adjusted the localization tables window so only the search bar shrinks/expands and all other buttons remain fixed. (LOC-1278)
+- Changed the Table Key ID Field so it is a selectable label and can now be copied. (LOC-1305)
+- Disabled the horizontal scroll in the ReorderableListView component. It was occasionally appearing when unnecessary and should not be required. ([LOC-1287](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1287))
+- Fix the samples not being included in the package data.
+- Fixed alignment of Project Locale identifier field. ([LOC-1277](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1277))
+- Fixed an issue where nested LocalizedStrings could not have their local variables queried. ([UUM-134944](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-134944))
+- Fixed an issue where the ExcludeEntryFromExport metadata would be ignored when exporting to CSV and XLIFF if the first table entry was null. ([UUM-136670](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-136670))
+- Fixed Android using the wrong app name locale codes for Indonesian and Hebrew. (LOC-1272)
+- Fixed the wrong group being used to resolve assets when a SharedGroup was assigned to the GroupResolver. ([UUM-135659](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-135659))
+- Fixed UI Builder picker so it saves the view state.
+- Improved fast enter playmode support. (UUM-131023)
+- Removed warning when using default localization settings. (LOC-1290)
+- When a new String Table is added, the IsSmart flag will now be propagated to its entries if it is already consistently set across all existing tables. ([LOC-1274](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1274))
+
+## [1.5.9] - 2025-11-13
+
+### Fixed
+
+- Fixed Addressables Analyzer not checking the table addresses correctly. ([LOC-1260](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1260))
+- Fixed an issue where negative values could be treated differently, causing invalid plural formatting. ([LOC-1258](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1258))
+- Fixed exception when pushing to a Google Sheet that had 1 less row than required. ([LOC-1261](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1261))
+- Fixed iOS and Mac builds not including localization data due to an if UNITY_INCLUDE_TESTS exclusion. ([LOC-1270](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1270))
+
+## [1.5.8] - 2025-09-26
+
+### Fixed
+
+- Fixed Smart Strings incorrectly evaluating global variables after the first selector. ([LOC-1252](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1252))
+- Simplified the string and asset picker so it does not include the side panels and customization options to match the object picker closer.
+- The string and asset picker will now remember the previous layout state. ([LOC-1256](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1256))
+
+## [1.5.7] - 2025-08-07
+
+### Fixed
+
+- `GameObjectLocalizer.ApplyLocaleVariant` will now throw an exception if a null locale is passed in.
+- Changed TrackChanges so it doesn't stay enabled when the editor is restarted.
+- Fixed a bug where a change update could cause the GameObject localizer to RequestUpdate before it had a valid locale. ([LOC-1231](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1231))
+- Fixed Android building throwing a `DirectoryNotFoundException` when using adaptive icons. ([LOC-1235](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1235))
+- Fixed plurals using the wrong formatter when the locale was using a custom formatter. Locale now implements `IFormatProvider` and will now be passed into the Smart String formatting Info as the `Provider`. ([LOC-1224](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1224))
+- Fixed TreeView obsolete warnings in 6.2 and above.
+- Fixed unmodified assets being marked dirty when reimporting Localization Addressable Group. ([LOC-1221](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1221))
+- Support has been added for localizing the app name on macOS, tvOS and visionOS. The system will use the same values that have been configured for iOS. ([LOC-1219](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1219))
+
+## [1.5.5] - 2025-05-28
+
+### Fixed
+
+- Added `LocalizationSettings.ForceRefresh`. This method triggers the `SelectedLocaleChanged` event, which typically forces all subscribing systems to update their displayed content. (LOC-1100)
+- Fixed `EditorPropertyDriver.UnregisterProperty` incorrectly calling the `RegisterProperty` method. ([LOC-1195](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1195))
+- Fixed an exception that could occur when pulling from a google sheet using API key and it was missing data. ([LOC-1206](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1206))
+- Fixed an issue where the `LocalizedString` would remain subscribed to a persistent variable `ValueChanged` event after all `StringChanged` subscribers have been removed. ([LOC-1213](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1213))
+- Fixed an issue where the gameobject localizer would try to load assets whilst entering playmode.
+- Fixed InvalidOperationException being thrown when using a PersistentVariable as a serialized field. ([LOC-1188](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1188))
+- Localization addressable analyzers are now available in Addressables 2.3.1 and above. ([LOC-1193](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1193))
+- Support for the device simulator platform override feature was added so you can localize on different platforms in the editor. (LOC-1184)
+- The LocalizedString binding editor variable name field is now delayed, so it will not trigger an update while it is being edited.
+- Updated to Addressables 1.25.0.
+
 ## [1.5.4] - 2025-01-06
 
 ### Fixed
@@ -501,7 +573,7 @@ Fixed the layout of the localized reference field dropdown and buttons. ([LOC-98
 - System Locale Selector will now only output the message The Locale X is not available, however the parent locale Y is available. in the player.
 - Updated Smart Format library to `aa9e4288612f79b86ab0cea36066797118d11a69` excluding the Nullable types support.
   - Fixed: Take an erroneous format string like `"this is {uncomplete"` (missing closing brace). Before v2.7.0 the parser handled `{uncomplete` as a `TextLiteral`, not as an erroneous `Placeholder`.
-  - Fixed: Fixed issue where If the `Parser` encountered a `ParsingError.TooManyClosingBraces`, this closing brace was simply "swallowed-up". This way, the result with `Parser.ErrorAction.MaintainTokens` differs from the original format string. From v2.7.0, the redundant closing brace is handled as a `TextLiteral`. 
+  - Fixed: Fixed issue where If the `Parser` encountered a `ParsingError.TooManyClosingBraces`, this closing brace was simply "swallowed-up". This way, the result with `Parser.ErrorAction.MaintainTokens` differs from the original format string. From v2.7.0, the redundant closing brace is handled as a `TextLiteral`.
   - Improved: For `ParsingError.TrailingOperatorsInSelector` and `ParsingError.InvalidCharactersInSelector` the causing character is now included in the `Exception.Message`.
   - Fix: Fully implemented all `Settings.ParseErrorAction`.
   - Enhanced SubString extension as described in [PR142](https://github.com/axuno/SmartFormat/pull/142).
@@ -607,9 +679,9 @@ Fixed the layout of the localized reference field dropdown and buttons. ([LOC-98
 
 ## [0.10.0] - 2021-01-20
 
-### Added 
+### Added
 
-- Added `GetDefaultTableAsync` to `LocalizedDatabase`. This can be used to get the DefaultTable directly. 
+- Added `GetDefaultTableAsync` to `LocalizedDatabase`. This can be used to get the DefaultTable directly.
 - Added `HasChangeHandler` to `LocalizedString` and `LocalizedAsset`. ([LOC-111](https://issuetracker.unity3d.com/issues/localization-unable-to-check-if-registerchangehandler-is-null-when-using-localisestringevent))
 - Added `GenerateCharacterSet` to `StringTable` and `StringTableCollection`. This can be used to extract the unique characters used by 1 or more `String Tables`. This could then be used with a Font Atlas creator. It is also possible to export a **Character Set** file from the Export menu of the String Table window, the String Table Collection window, or the Localization Tables window.
 - Added new Google Sheets example `SmartStringColumn` for synchronizing the Smart String property of an entry.
@@ -632,7 +704,7 @@ Fixed the layout of the localized reference field dropdown and buttons. ([LOC-98
   - Internal string comparisons (i.e. for placeholder names) are no more culture-specific, but Ordinal or OrdinalIgnoreCase respectively.
   - ListFormatter will now process IList data sources only.
   - Removed **SmartObjects**
-- Updated to **Addressables** 1.6.13. 
+- Updated to **Addressables** 1.6.13.
 - It's now possible to import `StringTableCollections` and `AssetTableCollections` into new or existing projects. When importing the Collection will create/update the Addressables and create any missing Locales in the project.
 - Changed sample **Language Selection Menu (UGUI)** to use the Native name for Locales.
 - The `Localization Tables` window search field is no longer cleared when changing selected table.
@@ -646,11 +718,11 @@ Fixed the layout of the localized reference field dropdown and buttons. ([LOC-98
 - Culture-sensitive formatting now uses the `Locale` information.
 - The `Localization Tables` window search field is no longer cleared when changing selected table.
 - The `Localization Tables` window search field is no longer cleared when changing selected table.
-- No Translation Found message is now a Smart String and has access to several placeholders which can be used to proivide details on the missing entry. 
+- No Translation Found message is now a Smart String and has access to several placeholders which can be used to proivide details on the missing entry.
 
 ### Fixed
 - Fixed exceptions being thrown when trying to load a table that does not exist. Loading missing String Tables will now use the missing translation message instead of throwing an exception when a table was missing and assets will return a failed operation handle. (LOC-120)
-- Fixed DefaultTable property throwing an invalid key exception when it is empty. Now getting a value from empty DefaultTable will throw an exception. 
+- Fixed DefaultTable property throwing an invalid key exception when it is empty. Now getting a value from empty DefaultTable will throw an exception.
 - The LocalizedAsset selector will now filter out incompatible types. ([LOC-123](https://issuetracker.unity3d.com/issues/localizedasset-property-drawer-does-not-filter-by-type))
 - Fixed **LocalizedString** Editor not preserving new items added to the Preview Arguments field. ([LOC-122](https://issuetracker.unity3d.com/issues/new-items-are-not-added-to-the-preview-arguments-list-in-the-localizedstring-field-when-pressing-the-plus-icon))
 - Fixed `AddTagMetadata` creating a new tag each time instead of using an existing tag. `RemoveTagMetadata` will now remove all empty tag entries, not just the first one it finds. ([LOC-124](https://issuetracker.unity3d.com/issues/smart-format-tag-in-the-metadata-stays-after-disabling-the-smart-option-when-smart-option-is-enabled-on-another-entry))
@@ -764,7 +836,7 @@ Fixed the layout of the localized reference field dropdown and buttons. ([LOC-98
   - Removed `RemoveTable`, `GetAssetTables`, `GetAssetTablesCollection`. These features are replaced by  `StringTableCollection` and `AssetTableCollection`.
   - Simplified `ILocalesProvider` interface Only 1 `GetLocale` function is now required.
   - Updated code Samples to include Creating Locales, Loading Strings, Google Sheets and a Language selection menu example.
-  
+
 ### Fixed
 - Fixed `Asset Tables Window` throwing `NullReferenceException` when editing Metadata for an entry that does not exist in the selected table.
 - Fixed incorrect installation instructions in documentation.

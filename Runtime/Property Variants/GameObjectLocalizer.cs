@@ -58,11 +58,16 @@ namespace UnityEngine.Localization.PropertyVariants
         internal AsyncOperationHandle CurrentOperation
         {
             get;
-            private set;
+            set;
         }
 
         void OnEnable()
         {
+            #if UNITY_EDITOR
+            if (PlaymodeState.IsChangingPlayMode)
+                return;
+            #endif
+
             LocalizationSettings.SelectedLocaleChanged += SelectedLocaleChanged;
 
             RegisterChanges();
@@ -177,8 +182,12 @@ namespace UnityEngine.Localization.PropertyVariants
         /// <param name="locale">The <see cref="Locale"/> to apply to the GameObject.</param>
         /// <param name="fallback">The fallback <see cref="Locale"/> to use when a value does not exist for <paramref name="locale"/>.</param>
         /// <returns>A handle to any loading operations or <see langword="default"/> if the operation was immediate.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="locale"/> is null.</exception>
         public AsyncOperationHandle ApplyLocaleVariant(Locale locale, Locale fallback)
         {
+            if (locale == null)
+                throw new ArgumentNullException(nameof(locale));
+
             if (CurrentOperation.IsValid())
             {
                 if (!CurrentOperation.IsDone)
@@ -261,12 +270,14 @@ namespace UnityEngine.Localization.PropertyVariants
             }
         }
 
-        void RequestUpdate()
+        internal void RequestUpdate()
         {
             // Ignore the change, it will be handled by the selected locale change event.
             if (m_IgnoreChange || LocalizationSettings.Instance.IsChangingSelectedLocale || (CurrentOperation.IsValid() && !CurrentOperation.IsDone))
                 return;
-            ApplyLocaleVariant(m_CurrentLocale);
+
+            if (m_CurrentLocale != null)
+                ApplyLocaleVariant(m_CurrentLocale);
         }
     }
 }

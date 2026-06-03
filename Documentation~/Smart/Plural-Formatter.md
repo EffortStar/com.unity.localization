@@ -68,3 +68,15 @@ To determine which plural rules to apply, the Plural Localization Formatter uses
 </tr>
 
 </table>
+
+## Custom plural rules
+
+You can add custom plural rules to replace existing ones or create new rules. Sometimes, you might want to use a custom ruleset for particular situations without changing the default rules everywhere. To do this, define a new plural rule and reference it directly in your smart string with brackets.
+
+The following example defines a custom plural rule for Russian that uses two plural forms instead of the standard three. When the pluralization logic requires the third form, this rule redirects it to the second form. This provides more precise control in scenarios where only two plural variations are needed.
+
+[!code-cs[](../../DocCodeSamples.Tests/SmartStringSamples.cs#plural-custom-formatter)]
+
+Example: `Жемчужин{count:p(ru-custom):а|ы|}`
+
+Note that the custom plural rule is invoked by placing `ru-custom` inside the brackets.

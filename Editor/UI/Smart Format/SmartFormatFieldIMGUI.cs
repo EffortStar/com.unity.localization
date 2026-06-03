@@ -193,7 +193,7 @@ namespace UnityEditor.Localization.UI
                     formatCache.LocalVariables = LocalizedString;
                     formatCache.Table = Table;
 
-                    m_PreviewText = m_SmartFormatter?.FormatWithCache(ref formatCache, RawText, locale?.Formatter, LocalizedString?.Arguments);
+                    m_PreviewText = m_SmartFormatter?.FormatWithCache(ref formatCache, RawText, locale, LocalizedString?.Arguments);
                     m_VariableChangedEvents.AddRange(formatCache.VariableTriggers);
 
                     foreach (var v in m_VariableChangedEvents)
@@ -486,7 +486,7 @@ namespace UnityEditor.Localization.UI
                 {
                     if (item is Placeholder ph)
                     {
-                        var id = $"{Table.GetInstanceID()}-{KeyId}-{nextId++}";
+                        var id = $"{InstanceIdHelper.GetInstanceId(Table)}-{KeyId}-{nextId++}";
                         m_FormatItemLookup.Add(id, ph);
                         result.Append($"<a href=\"{id}\">"); // TODO: Support Different selectors from Settings
                         result.Append("<b>");

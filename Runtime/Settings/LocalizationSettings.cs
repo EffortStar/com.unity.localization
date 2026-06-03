@@ -17,6 +17,15 @@ namespace UnityEngine.Localization.Settings
     /// </remarks>
     public class LocalizationSettings : ScriptableObject, IReset, IDisposable
     {
+        #if UNITY_EDITOR && UNITY_6000_0_OR_NEWER
+        //  Fast Enter Play Mode support
+        [RuntimeInitializeOnLoadMethod]
+        static void ResetStaticsOnLoad()
+        {
+            s_Instance = default;
+        }
+        #endif
+
         /// <summary>
         /// The name to use when retrieving the LocalizationSettings from CustomObject API.
         /// </summary>
@@ -323,7 +332,7 @@ namespace UnityEngine.Localization.Settings
                 m_InitializingOperationHandle = AddressablesInterface.ResourceManager.StartOperation(operation, operation.Dependency);
 
                 #if !UNITY_WEBGL // WebGL does not support WaitForCompletion
-                if (!m_InitializingOperationHandle.IsDone && m_InitializeSynchronously && IsPlaying)
+                if (!m_InitializingOperationHandle.IsDone && m_InitializeSynchronously && PlaymodeState.IsPlaying)
                     m_InitializingOperationHandle.WaitForCompletion();
                 #endif
             }
@@ -331,40 +340,12 @@ namespace UnityEngine.Localization.Settings
             return m_InitializingOperationHandle;
         }
 
-        #if UNITY_EDITOR
-        /// <summary>
-        /// We use this for testing so we don't have to enter play mode.
-        /// </summary>
-        internal bool? IsPlayingOverride { get; set; }
+        internal virtual RuntimePlatform Platform =>
+            #if ENABLE_DEVICE_SIMULATOR
+            Device.Application.platform;
+        #else
+            Application.platform;
         #endif
-
-        internal bool IsPlayingOrWillChangePlaymode
-        {
-            get
-            {
-                #if UNITY_EDITOR
-                if (IsPlayingOverride.HasValue)
-                    return IsPlayingOverride.Value;
-                return UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode || IsPlaying;
-                #else
-                return true;
-                #endif
-            }
-        }
-
-        internal bool IsPlaying
-        {
-            get
-            {
-                #if UNITY_EDITOR
-                if (IsPlayingOverride.HasValue)
-                    return IsPlayingOverride.Value;
-                #endif
-                return Application.isPlaying;
-            }
-        }
-
-        internal virtual RuntimePlatform Platform => Application.platform;
 
         /// <summary>
         /// <inheritdoc cref="IStartupLocaleSelector"/>
@@ -414,6 +395,28 @@ namespace UnityEngine.Localization.Settings
         /// </summary>
         /// <returns></returns>
         public MetadataCollection GetMetadata() => m_Metadata;
+
+        /// <summary>
+        /// Raises the <see cref="SelectedLocaleChanged"/> event to notify listeners that the selected locale has changed, triggering a refresh of localized strings and assets.
+        /// </summary>
+        /// <remarks>
+        /// This method triggers the <see cref="SelectedLocaleChanged"/> event, which typically forces all subscribing
+        /// systems to update their displayed content based on the current locale.
+        /// Use this after modifying localization assets, such as string tables, to 
+        /// immediately reflect the latest translations throughout the application.
+        /// If no locale is currently selected, the event will be raised with a <see langword="null"/> value.
+        /// </remarks>
+        /// <example>
+        /// The following example uses ForceRefresh to force an update after updating a string table entry.
+        /// <code source="../../DocCodeSamples.Tests/LocalizationSettingsSamples.cs" region="force-update"/>
+        /// </example>
+        public void ForceRefresh()
+        {
+            if (m_SelectedLocaleAsync.IsValid() && m_SelectedLocaleAsync.IsDone)
+                InvokeSelectedLocaleChanged(m_SelectedLocaleAsync.Result);
+            else
+                InvokeSelectedLocaleChanged(null);
+        }
 
         /// <summary>
         /// Sends out notifications when the locale has changed. Ensures the the events are sent in the correct order.
@@ -508,7 +511,7 @@ namespace UnityEngine.Localization.Settings
             }
 
             #if UNITY_EDITOR
-            if (!IsPlayingOrWillChangePlaymode)
+            if (!PlaymodeState.IsPlayingOrWillChangePlaymode)
             {
                 return m_AvailableLocales.GetLocale(EditorLocaleCode);
             }
@@ -584,20 +587,20 @@ namespace UnityEngine.Localization.Settings
 
             #if UNITY_EDITOR
             // Running the player loop outside of play mode will force an update for many types, especially UGUI.
-            if (!IsPlayingOrWillChangePlaymode)
+            if (!PlaymodeState.IsPlayingOrWillChangePlaymode)
             {
                 UnityEditor.EditorApplication.QueuePlayerLoopUpdate();
             }
             #endif
 
             // Ignore null locales in play mode
-            if (locale == null && IsPlayingOrWillChangePlaymode)
+            if (locale == null && PlaymodeState.IsPlayingOrWillChangePlaymode)
                 return;
 
             if (!m_SelectedLocaleAsync.IsValid() || !ReferenceEquals(m_SelectedLocaleAsync.Result, locale))
             {
                 #if UNITY_EDITOR
-                if (!IsPlayingOrWillChangePlaymode)
+                if (!PlaymodeState.IsPlayingOrWillChangePlaymode)
                 {
                     var code = locale == null ? string.Empty : locale.Identifier.Code;
                     EditorLocaleCode = code;
@@ -636,13 +639,7 @@ namespace UnityEngine.Localization.Settings
         /// <inheritdoc cref="SelectedLocale"/>
         /// </summary>
         /// <returns>\</returns>
-        public virtual Locale GetSelectedLocale()
-        {
-            var localeOp = GetSelectedLocaleAsync();
-            if (localeOp.IsDone)
-                return localeOp.Result;
-            return localeOp.WaitForCompletion();
-        }
+        public virtual Locale GetSelectedLocale() => AsyncOperationUtility.SynchronousLoad(GetSelectedLocaleAsync());
 
         /// <summary>
         /// Indicates that the Locale is no longer available.
@@ -708,6 +705,8 @@ namespace UnityEngine.Localization.Settings
             LocalizationSettings settings;
             #if UNITY_EDITOR
             UnityEditor.EditorBuildSettings.TryGetConfigObject(ConfigName, out settings);
+            #elif UNITY_6000_0_OR_NEWER
+            settings = FindFirstObjectByType<LocalizationSettings>();
             #else
             settings = FindObjectOfType<LocalizationSettings>();
             #endif
@@ -721,8 +720,6 @@ namespace UnityEngine.Localization.Settings
             // Use ReferenceEquals so we dont get false positives when using MoQ
             if (ReferenceEquals(settings, null))
             {
-                Debug.LogWarning("Could not find localization settings. Default will be used.");
-
                 settings = CreateInstance<LocalizationSettings>();
                 settings.name = "Default Localization Settings";
             }

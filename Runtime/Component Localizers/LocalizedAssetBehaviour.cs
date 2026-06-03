@@ -41,7 +41,15 @@ namespace UnityEngine.Localization.Components
             }
         }
 
-        protected virtual void OnEnable() => RegisterChangeHandler();
+        protected virtual void OnEnable()
+        {
+            #if UNITY_EDITOR
+            if (PlaymodeState.IsChangingPlayMode)
+                return;
+            #endif
+
+            RegisterChangeHandler();
+        }
 
         protected virtual void OnDisable() => ClearChangeHandler();
 
@@ -116,7 +124,7 @@ namespace UnityEngine.Localization.Components
         protected override void UpdateAsset(TObject localizedAsset)
         {
             #if UNITY_EDITOR
-            if (!LocalizationSettings.Instance.IsPlayingOrWillChangePlaymode)
+            if (!PlaymodeState.IsPlayingOrWillChangePlaymode)
             {
                 if (AssetReference.IsEmpty)
                 {
